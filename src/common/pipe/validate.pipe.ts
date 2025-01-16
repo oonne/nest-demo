@@ -9,10 +9,23 @@ export class ValidationPipe implements PipeTransform<any> {
       return value;
     }
     const object = plainToClass(metatype, value);
+
+    // 如果object是 undefined 或者是 null
+    if (Object.keys(object).length === 0) {
+      throw new BadRequestException('Request parameters are empty');
+    }
+
+    // 如果不是合法的json格式
+    if (typeof object !== 'object') {
+      throw new BadRequestException('Request parameters is not a json format');
+    }
+
     const errors = await validate(object);
     if (errors.length > 0) {
       console.log(errors);
-      throw new BadRequestException('Validation failed');
+      const firstError = Object.values(errors[0].constraints);
+      const errorMsg = `Request parameters are error: ${firstError}`;
+      throw new BadRequestException(errorMsg);
     }
     return value;
   }
