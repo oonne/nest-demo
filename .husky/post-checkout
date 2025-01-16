@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd api
+node .husky/check.js

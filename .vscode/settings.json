@@ -1,0 +1,15 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "npm.packageManager": "pnpm",
+  "editor.tabSize": 2,
+  "prettier.printWidth": 100, // 超过最大值换行
+  // 控制相关文件嵌套展示
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.env": "$(capture).env.*",
+    ".eslintrc.js": ".eslintignore",
+    ".prettierrc": ".prettierignore",
+  },
+  "terminal.integrated.scrollback": 10000,
+}
