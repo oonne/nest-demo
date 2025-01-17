@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Param, Body, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -19,8 +28,10 @@ export class CatsController {
 
   @Get('all')
   async findAll(): Promise<Cat[]> {
-    // 读取环境变量
-    console.log(this.configService.get<string>('ENV_NAME'));
+    // 读取环境变量并写配置的demo
+    const ENV_NAME = this.configService.get<string>('ENV_NAME');
+    const logger = new Logger();
+    logger.log(`当前环境：${ENV_NAME}`);
     return this.catsService.findAll();
   }
 

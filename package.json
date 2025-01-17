@@ -1,5 +1,5 @@
 {
-  "name": "fms-api",
+  "name": "nest-demo",
   "version": "0.0.1",
   "description": "",
   "author": "JAY",
@@ -11,7 +11,7 @@
     "start:local": "ENV=local nest start --debug --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "prepare": "cd .. && husky api/.husky"
+    "prepare": "husky .husky"
   },
   "dependencies": {
     "@nestjs/cli": "^10.4.8",
@@ -22,8 +22,11 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "lint-staged": "^15.2.10",
+    "nest-winston": "^1.10.1",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@nestjs/schematics": "^10.0.0",
