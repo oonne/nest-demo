@@ -11,8 +11,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
-import { Cat } from '../types/cat.interface';
-import { HttpResponse } from '../types/interface';
+import { resSuccess } from '../../utils/index';
+import { Cat } from '../../types/cat.interface';
+import { HttpResponse } from '../../types/interface';
 
 @Controller('cats')
 export class CatsController {
@@ -35,11 +36,7 @@ export class CatsController {
     logger.log(`当前环境：${ENV_NAME}`);
 
     const arr: Cat[] = this.catsService.findAll();
-    return {
-      code: 0,
-      message: '',
-      data: arr,
-    };
+    return resSuccess(arr);
   }
 
   @Get(':id')
