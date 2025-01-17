@@ -1,4 +1,11 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 
 /*
  * 全局异常过滤器
@@ -14,9 +21,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
     const message = exception instanceof Error ? exception.message : '服务器异常';
 
-    // 此处需要打印错误日志
-    // TODO
-    console.log(request.url, message);
+    // 打印错误日志
+    const logger = new Logger();
+    logger.error(`[${request.url}]接口异常: ${message}`);
 
     // 返回
     response.status(status).send({

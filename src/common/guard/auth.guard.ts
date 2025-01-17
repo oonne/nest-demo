@@ -6,7 +6,7 @@ export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    console.log('哈哈哈哈哈我是守卫', request.headers);
+    console.log('TODO 此处要写个鉴权守卫', request.headers);
 
     return true;
   }
