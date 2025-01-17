@@ -11,7 +11,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
-import { Cat } from './interfaces/cat.interface';
+import { Cat } from '../types/cat.interface';
+import { HttpResponse } from '../types/interface';
 
 @Controller('cats')
 export class CatsController {
@@ -27,12 +28,18 @@ export class CatsController {
   }
 
   @Get('all')
-  async findAll(): Promise<Cat[]> {
+  async findAll(): Promise<HttpResponse<Cat[]>> {
     // 读取环境变量并写配置的demo
     const ENV_NAME = this.configService.get<string>('ENV_NAME');
     const logger = new Logger();
     logger.log(`当前环境：${ENV_NAME}`);
-    return this.catsService.findAll();
+
+    const arr: Cat[] = this.catsService.findAll();
+    return {
+      code: 0,
+      message: '',
+      data: arr,
+    };
   }
 
   @Get(':id')

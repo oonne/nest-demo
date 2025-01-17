@@ -27,10 +27,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     // 返回
     response.status(status).send({
-      statusCode: status,
-      time: new Date().getTime(),
-      timestamp: new Date(),
+      code: status,
       message: message,
+      data: {
+        time: new Date().getTime(),
+        timestamp: new Date(),
+      },
     });
   }
 }
