@@ -20,6 +20,7 @@ export class ValidationPipe implements PipeTransform<any> {
       throw new BadRequestException('Request parameters is not a json format');
     }
 
+    // 如果有多个错误，只抛出第一个错误
     const errors = await validate(object);
     if (errors.length > 0) {
       console.log(errors);

@@ -1,11 +1,15 @@
 import { Controller, Get, Post, Param, Body, HttpException, HttpStatus } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { Cat } from './interfaces/cat.interface';
 
 @Controller('cats')
 export class CatsController {
-  constructor(private readonly catsService: CatsService) {}
+  constructor(
+    private readonly catsService: CatsService,
+    private configService: ConfigService,
+  ) {}
 
   @Post('add')
   async create(@Body() createCatDto: CreateCatDto): Promise<string> {
@@ -15,6 +19,8 @@ export class CatsController {
 
   @Get('all')
   async findAll(): Promise<Cat[]> {
+    // 读取环境变量
+    console.log(this.configService.get<string>('ENV_NAME'));
     return this.catsService.findAll();
   }
 
