@@ -12,7 +12,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "clear:logs": "rimraf logs",
-    "prepare": "husky .husky"
+    "prepare": "husky .husky",
+    "init:env": "tsx script/init-env.ts"
   },
   "dependencies": {
     "@nestjs/cli": "^10.4.8",
