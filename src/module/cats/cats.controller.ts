@@ -7,11 +7,11 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-  SetMetadata,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
+import { NoLogin } from '../../common/decorator/auth.decorator';
 import { resSuccess } from '../../utils/index';
 import { Cat } from '../../types/cat.interface';
 import { HttpResponse } from '../../types/interface';
@@ -30,7 +30,7 @@ export class CatsController {
   }
 
   @Get('all')
-  @SetMetadata('noLogin', true)
+  @NoLogin
   async findAll(): Promise<HttpResponse<Cat[]>> {
     // 读取环境变量并写配置的demo
     const ENV_NAME = this.configService.get<string>('ENV_NAME');

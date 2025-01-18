@@ -1,3 +1,6 @@
+/*
+ * 校验请求参数的管道
+ */
 import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';

@@ -1,3 +1,7 @@
+/*
+ * 日志中间件
+ * 只记录收到了哪些HTTP请求。不打印请求和响应内容
+ */
 import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
