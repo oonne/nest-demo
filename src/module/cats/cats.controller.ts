@@ -7,6 +7,7 @@ import {
   HttpException,
   HttpStatus,
   Logger,
+  SetMetadata,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CatsService } from './cats.service';
@@ -23,12 +24,13 @@ export class CatsController {
   ) {}
 
   @Post('add')
-  async create(@Body() createCatDto: CreateCatDto): Promise<string> {
+  async create(@Body() createCatDto: CreateCatDto): Promise<HttpResponse<string>> {
     this.catsService.create(createCatDto);
-    return 'OK';
+    return resSuccess('OK');
   }
 
   @Get('all')
+  @SetMetadata('noLogin', true)
   async findAll(): Promise<HttpResponse<Cat[]>> {
     // 读取环境变量并写配置的demo
     const ENV_NAME = this.configService.get<string>('ENV_NAME');
@@ -40,9 +42,9 @@ export class CatsController {
   }
 
   @Get(':id')
-  findOne(@Param() params): string {
+  findOne(@Param() params): HttpResponse<string> {
     console.log(params.id);
-    return `This action returns a #${params.id} cat`;
+    return resSuccess(`This action returns a #${params.id} cat`);
   }
 
   @Get('err')

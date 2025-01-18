@@ -5,9 +5,9 @@ import { Logger } from '@nestjs/common';
 import * as winston from 'winston';
 import { WinstonModule } from 'nest-winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
-import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filter/any-exception.filter';
 import { ValidationPipe } from './common/pipe/validate.pipe';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   /* 日志配置 */
@@ -40,7 +40,7 @@ async function bootstrap() {
     }),
   });
 
-  // 异常过滤器（用于自定义异常）
+  // 异常过滤器
   app.useGlobalFilters(new AllExceptionsFilter());
 
   // 验证入参管道
