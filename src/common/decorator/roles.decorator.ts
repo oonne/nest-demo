@@ -1,6 +1,6 @@
 /* 
  * 角色校验装饰器。
- * 用法：
+ * 用法示例：
   @Post()
   @Roles('admin')
   async create(@Body() createCatDto: CreateCatDto) {
