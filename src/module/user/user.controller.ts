@@ -5,7 +5,7 @@ import { NoLogin } from '../../common/decorator/auth.decorator';
 import { resSuccess } from '../../utils/index';
 import { HttpResponse } from '../../types/type';
 
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(
     private readonly UserService: UserService,

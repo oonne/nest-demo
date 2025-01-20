@@ -28,11 +28,11 @@ import { User } from './module/user/user.entity';
     }),
     // 数据库
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'mariadb',
       host: '127.0.0.1',
       port: 13306,
       username: 'root',
-      password: '12345',
+      password: '123456',
       database: 'nest_demo',
       entities: [User],
       synchronize: true,
