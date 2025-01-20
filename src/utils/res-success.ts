@@ -1,4 +1,4 @@
-import { HttpResponse } from '../types/interface';
+import { HttpResponse } from '../types/type';
 
 /*
  * 返回成功的的公共方法

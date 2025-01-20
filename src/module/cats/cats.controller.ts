@@ -13,8 +13,8 @@ import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { NoLogin } from '../../common/decorator/auth.decorator';
 import { resSuccess } from '../../utils/index';
-import { Cat } from '../../types/cat.interface';
-import { HttpResponse } from '../../types/interface';
+import { Cat } from './interface/cat.interface';
+import { HttpResponse } from '../../types/type';
 
 @Controller('cats')
 export class CatsController {

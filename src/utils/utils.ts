@@ -1,5 +1,5 @@
 import CryptoJS from 'crypto-js';
-import type { Timer } from '../types/interface';
+import type { Timer } from '../types/type';
 
 /**
  *  获取n位的数字随机数
