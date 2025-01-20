@@ -6,9 +6,9 @@ import { AuthGuard } from './common/guard/auth.guard';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { CatsModule } from './module/cats/cats.module';
 import { CatsController } from './module/cats/cats.controller';
-import { UserModule } from './module/user/user.module';
-import { UserController } from './module/user/user.controller';
-import { User } from './module/user/user.entity';
+import { StaffModule } from './module/staff/staff.module';
+import { StaffController } from './module/staff/staff.controller';
+import { Staff } from './module/staff/staff.entity';
 
 @Module({
   providers: [
@@ -34,17 +34,17 @@ import { User } from './module/user/user.entity';
       username: 'root',
       password: '123456',
       database: 'nest_demo',
-      entities: [User],
+      entities: [Staff],
       synchronize: true,
     }),
     // 子模块
     CatsModule,
-    UserModule,
+    StaffModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes(CatsController);
-    consumer.apply(LoggerMiddleware).forRoutes(UserController);
+    consumer.apply(LoggerMiddleware).forRoutes(StaffController);
   }
 }

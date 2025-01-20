@@ -7,12 +7,12 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Staff {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: 'userId', nullable: false, unique: true })
-  userId: string;
+  @Column({ comment: 'staffId', nullable: false, unique: true })
+  staffId: string;
 
   @Column({ comment: '用户名', length: 255, nullable: false, unique: true })
   name: string;
