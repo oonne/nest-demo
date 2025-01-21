@@ -1,21 +1,20 @@
-import { IsString, IsInt, IsBoolean } from 'class-validator';
+import { IsString, IsIn, IsBoolean, IsOptional } from 'class-validator';
+import { roleKeyArr } from '../../../constant/role';
 
 /* 新建 staff 的校验 */
 export class CreateStaffDto {
   @IsString()
-  staffId: string;
-
-  @IsString()
   name: string;
 
+  @IsOptional()
   @IsString()
   password: string;
 
-  @IsInt()
+  @IsIn(roleKeyArr)
   role: number;
 
   @IsBoolean()
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 /* 更新 staff 的校验 */
@@ -23,15 +22,19 @@ export class UpdateStaffDto {
   @IsString()
   staffId: string;
 
+  @IsOptional()
   @IsString()
-  name?: string;
+  name: string;
 
+  @IsOptional()
   @IsString()
-  password?: string;
+  password: string;
 
-  @IsInt()
-  role?: number;
+  @IsOptional()
+  @IsIn(roleKeyArr)
+  role: number;
 
+  @IsOptional()
   @IsBoolean()
-  isActive?: boolean;
+  isActive: boolean;
 }

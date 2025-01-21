@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { roleDesc } from '../../constant/role';
 
 @Entity()
 export class Staff {
@@ -20,7 +21,7 @@ export class Staff {
   @Column({ comment: '密码(hashed)', length: 255, nullable: false })
   password: string;
 
-  @Column({ comment: '角色: 1 超级管理员 , 2 合伙人', type: 'int', nullable: false })
+  @Column({ comment: `角色: ${roleDesc}`, type: 'int', nullable: false })
   role: number;
 
   @Column({ comment: '是否启用', default: true, nullable: false })

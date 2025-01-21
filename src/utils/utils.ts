@@ -42,6 +42,21 @@ const createHash = (text: string, maxLen?: number): string => {
   return hashedText;
 };
 
+/*
+ * 生成ID
+ * 规则: 前缀+ 哈希值 (时间戳 + 随机字符串)
+ */
+const generateId = (prefix?: string): string => {
+  const time = Date.now();
+  const randomStr = randomChars(8);
+  const hash = createHash(`${time}${randomStr}`);
+
+  if (!prefix) {
+    return hash;
+  }
+  return `${prefix}-${hash}`;
+};
+
 /**
  *  延迟一定时间，单位毫秒。
  */
@@ -73,6 +88,7 @@ export default {
   randomWithin,
   randomChars,
   createHash,
+  generateId,
   sleep,
   debounce,
 };

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { StaffService } from './staff.service';
 import { CreateStaffDto, UpdateStaffDto } from './dto/staff.dto';
 import { NoLogin } from '../../common/decorator/auth.decorator';
-import { resSuccess } from '../../utils/index';
+import { resSuccess, Utils } from '../../utils/index';
 import { HttpResponse } from '../../types/type';
 
 @Controller('staff')
@@ -29,8 +29,18 @@ export class StaffController {
   @Post('add')
   @NoLogin
   async add(@Body() createStaffDto: CreateStaffDto): Promise<HttpResponse<any>> {
-    const arr = this.StaffService.create(createStaffDto);
-    return resSuccess(arr);
+    // 生成随机的staffId
+    const staffId = Utils.generateId('staff');
+    const isActive = !!createStaffDto.isActive;
+    const staff = {
+      ...createStaffDto,
+      staffId,
+      isActive,
+    };
+
+    // 写入数据库
+    const res = this.StaffService.create(staff);
+    return resSuccess(res);
   }
 
   /*
