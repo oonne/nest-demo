@@ -19,6 +19,9 @@ export class StaffController {
   @Get('all')
   @NoLogin
   async findAll(): Promise<HttpResponse<any>> {
+    // TODO：分页
+    // TODO: 筛选/搜索
+    // TODO：排序
     const arr = this.StaffService.findAll();
     return resSuccess(arr);
   }

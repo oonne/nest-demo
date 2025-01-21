@@ -6,13 +6,13 @@ export class CreateStaffDto {
   @IsString()
   name: string;
 
-  @IsOptional()
   @IsString()
   password: string;
 
   @IsIn(roleKeyArr)
   role: number;
 
+  @IsOptional()
   @IsBoolean()
   isActive?: boolean;
 }
