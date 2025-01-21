@@ -31,7 +31,7 @@ export class StaffService {
   }
 
   /* 更新 */
-  async update(user: Staff): Promise<Staff> {
+  async update(user: Partial<Staff>): Promise<Staff> {
     const userToUpdate = await this.staffRepository.findOneBy({ staffId: user.staffId });
     if (!userToUpdate) {
       throw new Error('Staff not found');

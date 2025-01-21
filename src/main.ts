@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
@@ -9,7 +10,10 @@ import { AllExceptionsFilter } from './common/filter/any-exception.filter';
 import { ValidationPipe } from './common/pipe/validate.pipe';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+/*
+ * 启动Nest
+ */
+const startNest = async () => {
   /* 日志配置 */
   const instance = winston.createLogger({
     transports: [
@@ -51,8 +55,25 @@ async function bootstrap() {
   const envName = configService.get<string>('ENV_NAME');
   const port = configService.get<number>('PORT');
   logger.log(`-------环境:[${envName}]----------------`);
-  logger.log(`-------端口:[${port}]----------------`);
 
-  await app.listen(10011, '0.0.0.0');
-}
+  // 监听
+  await app.listen(port, '0.0.0.0');
+  logger.log(`-------端口:[${port}]----------------`);
+};
+
+/*
+ * 启动引导程序
+ */
+const bootstrap = async () => {
+  /* 如果没有.env文件，抛出提示 */
+  if (!fs.existsSync('.env')) {
+    console.log('未找到.env文件。请先运行 npm run init:env');
+    return;
+  }
+
+  /* 启动 nest */
+  await startNest();
+};
+
+/* 主函数 */
 bootstrap();

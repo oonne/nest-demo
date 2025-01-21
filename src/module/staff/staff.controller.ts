@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { StaffService } from './staff.service';
-import { CreateStaffDto } from './dto/create-staff.dto';
+import { CreateStaffDto, UpdateStaffDto } from './dto/staff.dto';
 import { NoLogin } from '../../common/decorator/auth.decorator';
 import { resSuccess } from '../../utils/index';
 import { HttpResponse } from '../../types/type';
@@ -30,6 +30,16 @@ export class StaffController {
   @NoLogin
   async add(@Body() createStaffDto: CreateStaffDto): Promise<HttpResponse<any>> {
     const arr = this.StaffService.create(createStaffDto);
+    return resSuccess(arr);
+  }
+
+  /*
+   * 更新用户
+   */
+  @Post('update')
+  @NoLogin
+  async update(@Body() updateStaffDto: UpdateStaffDto): Promise<HttpResponse<any>> {
+    const arr = this.StaffService.update(updateStaffDto);
     return resSuccess(arr);
   }
 }

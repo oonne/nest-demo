@@ -14,7 +14,7 @@ export class ValidationPipe implements PipeTransform<any> {
     const object = plainToClass(metatype, value);
 
     // 如果object是 undefined 或者是 null
-    if (Object.keys(object).length === 0) {
+    if (!object || Object.keys(object).length === 0) {
       throw new BadRequestException('Request parameters are empty');
     }
 
