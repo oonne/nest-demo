@@ -13,7 +13,7 @@ export class StaffService {
   /*
    * 查询全部
    */
-  findAll(): Promise<Staff[]> {
+  getList(): Promise<Staff[]> {
     // TODO：分页
     // TODO: 筛选/搜索
     // TODO：排序
@@ -21,7 +21,7 @@ export class StaffService {
   }
 
   /* 查询单个 */
-  findOne(staffId: string): Promise<Staff> {
+  getDetail(staffId: string): Promise<Staff> {
     return this.staffRepository.findOneBy({ staffId: staffId });
   }
 

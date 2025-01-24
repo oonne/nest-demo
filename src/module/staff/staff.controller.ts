@@ -4,7 +4,8 @@ import { StaffService } from './staff.service';
 import { CreateStaffDto, UpdateStaffDto } from './dto/staff.dto';
 import { NoLogin } from '../../common/decorator/auth.decorator';
 import { resSuccess, Utils } from '../../utils/index';
-import { HttpResponse } from '../../types/type';
+import { HttpResponse, ListResponse } from '../../types/type';
+import { Staff } from './staff.entity';
 
 @Controller('staff')
 export class StaffController {
@@ -16,14 +17,19 @@ export class StaffController {
   /*
    * 查询全部用户
    */
-  @Post('all')
+  @Post('get-list')
   @NoLogin
-  async findAll(): Promise<HttpResponse<null>> {
+  async findAll(): Promise<HttpResponse<ListResponse<Staff>>> {
     // TODO：分页
     // TODO: 筛选/搜索
     // TODO：排序
-    await this.StaffService.findAll();
-    return resSuccess(null);
+    const list = await this.StaffService.getList();
+
+    return resSuccess({
+      pageNo: 1,
+      total: 20,
+      list: list,
+    });
   }
 
   /*
@@ -52,7 +58,7 @@ export class StaffController {
   /*
    * 更新用户
    */
-  @Post('update')
+  @Post('get-detail')
   @NoLogin
   async update(@Body() updateStaffDto: UpdateStaffDto): Promise<HttpResponse<any>> {
     const arr = this.StaffService.update(updateStaffDto);

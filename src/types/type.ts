@@ -8,3 +8,11 @@ export interface HttpResponse<T> {
   message: string;
   data: T;
 }
+
+/* 列表返回 */
+export interface ListResponse<T> {
+  list: T[];
+  total: number;
+  pageNo: number;
+  [key: string]: any;
+}
