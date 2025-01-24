@@ -1,6 +1,10 @@
 const ErrorCode = {
-  // 请求参数错误
-  PARAM_ERROR: 10000,
+  // 未知错误
+  UNKNOWN_ERROR: 10000,
+
+  /* Staff模块 */
+  // 用户名必须唯一
+  STAFF_USERNAME_UNIQUE: 10001,
 };
 
 export default ErrorCode;

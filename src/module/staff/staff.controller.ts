@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { StaffService } from './staff.service';
 import { CreateStaffDto, UpdateStaffDto } from './dto/staff.dto';
@@ -16,14 +16,14 @@ export class StaffController {
   /*
    * 查询全部用户
    */
-  @Get('all')
+  @Post('all')
   @NoLogin
-  async findAll(): Promise<HttpResponse<any>> {
+  async findAll(): Promise<HttpResponse<null>> {
     // TODO：分页
     // TODO: 筛选/搜索
     // TODO：排序
-    const arr = this.StaffService.findAll();
-    return resSuccess(arr);
+    await this.StaffService.findAll();
+    return resSuccess(null);
   }
 
   /*
@@ -32,6 +32,9 @@ export class StaffController {
   @Post('add')
   @NoLogin
   async add(@Body() createStaffDto: CreateStaffDto): Promise<HttpResponse<any>> {
+    // 校验用户名唯一
+    // TODO
+
     // 生成随机的staffId
     const staffId = Utils.generateId('staff');
     const isActive = !!createStaffDto.isActive;

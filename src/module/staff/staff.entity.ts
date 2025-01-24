@@ -27,6 +27,9 @@ export class Staff {
   @Column({ comment: '是否启用', default: true, nullable: false })
   isActive: boolean;
 
+  @Column({ comment: 'Refresh Token', length: 255, nullable: true })
+  refreshToken: string;
+
   @CreateDateColumn({ comment: '创建时间', nullable: false })
   createdAt: Date;
 
