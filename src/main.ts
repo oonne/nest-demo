@@ -56,6 +56,9 @@ const startNest = async () => {
   const port = configService.get<number>('PORT');
   logger.log(`-------环境:[${envName}]----------------`);
 
+  // CORS
+  app.enableCors();
+
   // 监听
   await app.listen(port, '0.0.0.0');
   logger.log(`-------端口:[${port}]----------------`);
