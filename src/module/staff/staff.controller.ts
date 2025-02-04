@@ -1,8 +1,9 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { StaffService } from './staff.service';
-import { CreateStaffDto, UpdateStaffDto } from './dto/staff.dto';
+import { CreateStaffDto, UpdateStaffDto, GetDetailDto } from './dto/staff.dto';
 import { NoLogin } from '../../common/decorator/auth.decorator';
+import ErrorCode from '../../constant/error-code';
 import { resSuccess, Utils } from '../../utils/index';
 import { HttpResponse, ListResponse } from '../../types/type';
 import { Staff } from './staff.entity';
@@ -40,21 +41,46 @@ export class StaffController {
   }
 
   /*
+   * 根据staffId查询单个
+   */
+  @Post('get-detail')
+  @NoLogin
+  async getDetail(@Body() getDetailDto: GetDetailDto): Promise<HttpResponse<any>> {
+    const staff = await this.StaffService.getDetail(getDetailDto.staffId);
+    if (!staff) {
+      return {
+        code: ErrorCode.STAFF_NOT_FOUND,
+        message: '用户不存在',
+      };
+    }
+
+    // 过滤不显示的字段
+    delete staff.password;
+    delete staff.refreshToken;
+
+    return resSuccess(staff);
+  }
+
+  /*
    * 新增用户
    */
   @Post('add')
   @NoLogin
   async add(@Body() createStaffDto: CreateStaffDto): Promise<HttpResponse<any>> {
     // 校验用户名唯一
-    // TODO
+    const sameNameStaff = await this.StaffService.getDetailByName(createStaffDto.name);
+    if (sameNameStaff) {
+      return {
+        code: ErrorCode.STAFF_USERNAME_UNIQUE,
+        message: '用户名已存在',
+      };
+    }
 
     // 生成随机的staffId
     const staffId = Utils.generateId('staff');
-    const isActive = !!createStaffDto.isActive;
     const staff = {
       ...createStaffDto,
       staffId,
-      isActive,
     };
 
     // 写入数据库
@@ -65,9 +91,9 @@ export class StaffController {
   /*
    * 更新用户
    */
-  @Post('get-detail')
+  @Post('update')
   @NoLogin
-  async getDetail(@Body() updateStaffDto: UpdateStaffDto): Promise<HttpResponse<any>> {
+  async update(@Body() updateStaffDto: UpdateStaffDto): Promise<HttpResponse<any>> {
     const arr = this.StaffService.update(updateStaffDto);
     return resSuccess(arr);
   }

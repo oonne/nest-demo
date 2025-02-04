@@ -20,9 +20,14 @@ export class StaffService {
     return this.staffRepository.find();
   }
 
-  /* 查询单个 */
+  /* 根据staffId查询单个 */
   getDetail(staffId: string): Promise<Staff> {
     return this.staffRepository.findOneBy({ staffId: staffId });
+  }
+
+  /* 根据name查询单个 */
+  getDetailByName(name: string): Promise<Staff> {
+    return this.staffRepository.findOneBy({ name: name });
   }
 
   /* 新增 */

@@ -1,7 +1,13 @@
 import { IsString, IsIn, IsBoolean, IsOptional } from 'class-validator';
 import { roleKeyArr } from '../../../constant/role';
 
-/* 新建 staff 的校验 */
+/* 查询单个 staff */
+export class GetDetailDto {
+  @IsString()
+  staffId: string;
+}
+
+/* 新建 staff */
 export class CreateStaffDto {
   @IsString()
   name: string;
@@ -12,12 +18,11 @@ export class CreateStaffDto {
   @IsIn(roleKeyArr)
   role: number;
 
-  @IsOptional()
   @IsBoolean()
   isActive?: boolean;
 }
 
-/* 更新 staff 的校验 */
+/* 更新 staff */
 export class UpdateStaffDto {
   @IsString()
   staffId: string;

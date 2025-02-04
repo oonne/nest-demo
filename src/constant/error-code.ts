@@ -5,6 +5,8 @@ const ErrorCode = {
   /* Staff模块 */
   // 用户名必须唯一
   STAFF_USERNAME_UNIQUE: 10001,
+  // 用户不存在
+  STAFF_NOT_FOUND: 10002,
 };
 
 export default ErrorCode;

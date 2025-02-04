@@ -6,7 +6,7 @@ export type Interval = ReturnType<typeof setInterval> | null;
 export interface HttpResponse<T> {
   code: number;
   message: string;
-  data: T;
+  data?: T;
 }
 
 /* 列表返回 */
