@@ -1,7 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { StaffService } from './staff.service';
-import { CreateStaffDto, UpdateStaffDto, GetDetailDto } from './dto/staff.dto';
+import { CreateStaffDto, UpdateStaffDto, GetDetailDto, DeleteStaffDto } from './dto/staff.dto';
 import { NoLogin } from '../../common/decorator/auth.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess, Utils } from '../../utils/index';
@@ -96,5 +96,15 @@ export class StaffController {
   async update(@Body() updateStaffDto: UpdateStaffDto): Promise<HttpResponse<any>> {
     const arr = this.StaffService.update(updateStaffDto);
     return resSuccess(arr);
+  }
+
+  /*
+   * 删除用户
+   */
+  @Post('delete')
+  @NoLogin
+  async delete(@Body() deleteStaffDto: DeleteStaffDto): Promise<HttpResponse<any>> {
+    const res = await this.StaffService.delete(deleteStaffDto.staffId);
+    return resSuccess(res);
   }
 }

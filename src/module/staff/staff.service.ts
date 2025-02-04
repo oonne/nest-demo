@@ -45,7 +45,7 @@ export class StaffService {
   }
 
   /* 删除 */
-  async remove(staffId: string): Promise<void> {
+  async delete(staffId: string): Promise<void> {
     await this.staffRepository.delete({ staffId });
   }
 }

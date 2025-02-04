@@ -43,3 +43,9 @@ export class UpdateStaffDto {
   @IsBoolean()
   isActive: boolean;
 }
+
+/* 删除 staff */
+export class DeleteStaffDto {
+  @IsString()
+  staffId: string;
+}
