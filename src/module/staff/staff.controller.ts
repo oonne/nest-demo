@@ -19,12 +19,19 @@ export class StaffController {
    */
   @Post('get-list')
   @NoLogin
-  async findAll(): Promise<HttpResponse<ListResponse<Staff>>> {
+  async getList(): Promise<HttpResponse<ListResponse<Staff>>> {
     // TODO：分页
     // TODO: 筛选/搜索
     // TODO：排序
     const list = await this.StaffService.getList();
 
+    // 过滤不显示的字段
+    list.forEach((item) => {
+      delete item.password;
+      delete item.refreshToken;
+    });
+
+    // 返回
     return resSuccess({
       pageNo: 1,
       total: 20,
@@ -60,7 +67,7 @@ export class StaffController {
    */
   @Post('get-detail')
   @NoLogin
-  async update(@Body() updateStaffDto: UpdateStaffDto): Promise<HttpResponse<any>> {
+  async getDetail(@Body() updateStaffDto: UpdateStaffDto): Promise<HttpResponse<any>> {
     const arr = this.StaffService.update(updateStaffDto);
     return resSuccess(arr);
   }
