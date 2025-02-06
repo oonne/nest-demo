@@ -1,5 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer, Logger } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from './common/guard/auth.guard';
@@ -8,7 +8,6 @@ import { CatsModule } from './module/cats/cats.module';
 import { CatsController } from './module/cats/cats.controller';
 import { StaffModule } from './module/staff/staff.module';
 import { StaffController } from './module/staff/staff.controller';
-import { Staff } from './module/staff/staff.entity';
 
 @Module({
   providers: [
@@ -27,15 +26,19 @@ import { Staff } from './module/staff/staff.entity';
       envFilePath: [`.env.${process.env.ENV}`, '.env'],
     }),
     // 数据库
-    TypeOrmModule.forRoot({
-      type: 'mariadb',
-      host: '127.0.0.1',
-      port: 13306,
-      username: 'root',
-      password: '123456',
-      database: 'nest_demo',
-      entities: [Staff],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mariadb',
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USER'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     // 子模块
     CatsModule,
