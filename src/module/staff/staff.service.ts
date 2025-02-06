@@ -11,13 +11,26 @@ export class StaffService {
   ) {}
 
   /*
-   * 查询全部
+   * 查询全部(支持分页)
+   * TODO：筛选/搜索
+   * TODO：排序
    */
-  getList(): Promise<Staff[]> {
-    // TODO：分页
-    // TODO: 筛选/搜索
-    // TODO：排序
-    return this.staffRepository.find();
+  async getList({
+    pageNo = 1,
+    pageSize = 10,
+  }: {
+    pageNo?: number;
+    pageSize?: number;
+  }): Promise<{ items: Staff[]; total: number }> {
+    const [items, total] = await this.staffRepository.findAndCount({
+      skip: (pageNo - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return {
+      items,
+      total,
+    };
   }
 
   /* 根据staffId查询单个 */

@@ -1,5 +1,14 @@
-import { IsString, IsIn, IsBoolean, IsOptional } from 'class-validator';
+import { IsInt, IsString, IsIn, IsBoolean, IsOptional } from 'class-validator';
 import { roleKeyArr } from '../../../constant/role';
+
+/* 查询staff列表 */
+export class GetListDto {
+  @IsInt()
+  pageNo: number;
+
+  @IsInt()
+  pageSize: number;
+}
 
 /* 查询单个 staff */
 export class GetDetailDto {

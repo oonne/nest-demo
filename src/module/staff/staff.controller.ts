@@ -1,7 +1,13 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { StaffService } from './staff.service';
-import { CreateStaffDto, UpdateStaffDto, GetDetailDto, DeleteStaffDto } from './dto/staff.dto';
+import {
+  GetListDto,
+  GetDetailDto,
+  CreateStaffDto,
+  UpdateStaffDto,
+  DeleteStaffDto,
+} from './dto/staff.dto';
 import { NoLogin } from '../../common/decorator/auth.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess, Utils } from '../../utils/index';
@@ -20,23 +26,25 @@ export class StaffController {
    */
   @Post('get-list')
   @NoLogin
-  async getList(): Promise<HttpResponse<ListResponse<Staff>>> {
-    // TODO：分页
+  async getList(@Body() getListDto: GetListDto): Promise<HttpResponse<ListResponse<Staff>>> {
     // TODO: 筛选/搜索
     // TODO：排序
-    const list = await this.StaffService.getList();
+    const { items, total } = await this.StaffService.getList({
+      pageNo: getListDto.pageNo,
+      pageSize: getListDto.pageSize,
+    });
 
     // 过滤不显示的字段
-    list.forEach((item) => {
+    items.forEach((item) => {
       delete item.password;
       delete item.refreshToken;
     });
 
     // 返回
     return resSuccess({
-      pageNo: 1,
-      total: 20,
-      list: list,
+      pageNo: getListDto.pageNo,
+      total: total,
+      list: items,
     });
   }
 
