@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Staff } from './staff.entity';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class StaffService {
@@ -36,7 +37,7 @@ export class StaffService {
         [sortField]: sortOrder,
       },
       where: {
-        name: name,
+        name: name ? Like(`%${name}%`) : undefined,
         isActive: isActive,
       },
     });
