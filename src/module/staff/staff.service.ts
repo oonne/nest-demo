@@ -13,18 +13,24 @@ export class StaffService {
   /*
    * 查询全部(支持分页)
    * TODO：筛选/搜索
-   * TODO：排序
    */
   async getList({
     pageNo = 1,
     pageSize = 10,
+    sortField = 'createdAt',
+    sortOrder = 'desc',
   }: {
     pageNo?: number;
     pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
   }): Promise<{ items: Staff[]; total: number }> {
     const [items, total] = await this.staffRepository.findAndCount({
       skip: (pageNo - 1) * pageSize,
       take: pageSize,
+      order: {
+        [sortField]: sortOrder,
+      },
     });
 
     return {

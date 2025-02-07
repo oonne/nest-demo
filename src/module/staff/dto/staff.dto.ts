@@ -8,6 +8,14 @@ export class GetListDto {
 
   @IsInt()
   pageSize: number;
+
+  @IsOptional()
+  @IsString()
+  sortField?: string;
+
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  sortOrder?: string;
 }
 
 /* 查询单个 staff */

@@ -28,10 +28,11 @@ export class StaffController {
   @NoLogin
   async getList(@Body() getListDto: GetListDto): Promise<HttpResponse<ListResponse<Staff>>> {
     // TODO: 筛选/搜索
-    // TODO：排序
     const { items, total } = await this.StaffService.getList({
       pageNo: getListDto.pageNo,
       pageSize: getListDto.pageSize,
+      sortField: getListDto.sortField,
+      sortOrder: getListDto.sortOrder,
     });
 
     // 过滤不显示的字段
