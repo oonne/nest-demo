@@ -19,17 +19,25 @@ export class StaffService {
     pageSize = 10,
     sortField = 'createdAt',
     sortOrder = 'desc',
+    name,
+    isActive,
   }: {
     pageNo?: number;
     pageSize?: number;
     sortField?: string;
     sortOrder?: string;
+    name?: string;
+    isActive?: boolean;
   }): Promise<{ items: Staff[]; total: number }> {
     const [items, total] = await this.staffRepository.findAndCount({
       skip: (pageNo - 1) * pageSize,
       take: pageSize,
       order: {
         [sortField]: sortOrder,
+      },
+      where: {
+        name: name,
+        isActive: isActive,
       },
     });
 

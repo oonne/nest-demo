@@ -11,6 +11,14 @@ export class GetListDto {
 
   @IsOptional()
   @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
+  @IsOptional()
+  @IsString()
   sortField?: string;
 
   @IsOptional()
