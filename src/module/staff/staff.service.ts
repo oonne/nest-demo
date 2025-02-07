@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Staff } from './staff.entity';
-import { Like } from 'typeorm';
+import { Like, In } from 'typeorm';
 
 @Injectable()
 export class StaffService {
@@ -13,7 +13,6 @@ export class StaffService {
 
   /*
    * 查询全部(支持分页)
-   * TODO：筛选/搜索
    */
   async getList({
     pageNo = 1,
@@ -21,6 +20,7 @@ export class StaffService {
     sortField = 'createdAt',
     sortOrder = 'desc',
     name,
+    role,
     isActive,
   }: {
     pageNo?: number;
@@ -28,6 +28,7 @@ export class StaffService {
     sortField?: string;
     sortOrder?: string;
     name?: string;
+    role?: number[];
     isActive?: boolean;
   }): Promise<{ items: Staff[]; total: number }> {
     const [items, total] = await this.staffRepository.findAndCount({
@@ -38,6 +39,7 @@ export class StaffService {
       },
       where: {
         name: name ? Like(`%${name}%`) : undefined,
+        role: role?.length ? In(role) : undefined,
         isActive: isActive,
       },
     });

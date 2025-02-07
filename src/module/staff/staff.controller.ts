@@ -33,11 +33,13 @@ export class StaffController {
       sortField: getListDto.sortField,
       sortOrder: getListDto.sortOrder,
       name: getListDto.name,
+      role: getListDto.role,
       isActive: getListDto.isActive,
     });
 
     // 过滤不显示的字段
     items.forEach((item) => {
+      delete item.id;
       delete item.password;
       delete item.refreshToken;
     });
@@ -65,6 +67,7 @@ export class StaffController {
     }
 
     // 过滤不显示的字段
+    delete staff.id;
     delete staff.password;
     delete staff.refreshToken;
 

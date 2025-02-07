@@ -1,4 +1,4 @@
-import { IsInt, IsString, IsIn, IsBoolean, IsOptional } from 'class-validator';
+import { IsInt, IsArray, IsString, IsIn, IsBoolean, IsOptional } from 'class-validator';
 import { roleKeyArr } from '../../../constant/role';
 
 /* 查询staff列表 */
@@ -12,6 +12,11 @@ export class GetListDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsIn(roleKeyArr)
+  role?: number[];
 
   @IsOptional()
   @IsBoolean()
