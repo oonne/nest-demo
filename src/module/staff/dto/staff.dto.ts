@@ -15,7 +15,7 @@ export class GetListDto {
 
   @IsOptional()
   @IsArray()
-  @IsIn(roleKeyArr)
+  @IsIn(roleKeyArr, { each: true })
   role?: number[];
 
   @IsOptional()
