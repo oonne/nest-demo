@@ -1,5 +1,9 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { NoLogin } from '../../common/decorator/auth.decorator';
+import ErrorCode from '../../constant/error-code';
+import { resSuccess, Utils } from '../../utils/index';
+import { HttpResponse, ListResponse } from '../../types/type';
 import { StaffService } from './staff.service';
 import {
   GetListDto,
@@ -8,10 +12,6 @@ import {
   UpdateStaffDto,
   DeleteStaffDto,
 } from './dto/staff.dto';
-import { NoLogin } from '../../common/decorator/auth.decorator';
-import ErrorCode from '../../constant/error-code';
-import { resSuccess, Utils } from '../../utils/index';
-import { HttpResponse, ListResponse } from '../../types/type';
 import { Staff } from './staff.entity';
 
 @Controller('staff')
