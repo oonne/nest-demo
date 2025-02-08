@@ -44,6 +44,7 @@ export class AuthController {
     // 过滤不显示的字段
     delete staff.id;
     delete staff.password;
+    delete staff.refreshToken;
 
     return resSuccess({
       staff,

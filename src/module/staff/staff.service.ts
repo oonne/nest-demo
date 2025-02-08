@@ -50,8 +50,16 @@ export class StaffService {
    * 更新refreshToken
    */
   async generateRefreshToken(staffId: string): Promise<string> {
+    const staff = await this.staffRepository.findOneBy({ staffId });
+    if (!staff) {
+      return '';
+    }
+
     const refreshToken = createHash(randomChars(32), 32);
-    await this.staffRepository.update(staffId, { refreshToken });
+    await this.staffRepository.save({
+      ...staff,
+      refreshToken,
+    });
     return refreshToken;
   }
 
