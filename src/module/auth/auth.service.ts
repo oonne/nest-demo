@@ -22,7 +22,7 @@ export class AuthService {
     // 如果staff为空，创建一个管理员，账号和密码都是admin
     await this.staffService.create({
       name: 'admin',
-      password: createHash('admin'),
+      password: createHash('admin', 32),
       role: 1,
       isActive: true,
     });
@@ -33,8 +33,12 @@ export class AuthService {
     // 查询用户
     const staff = await this.staffService.getDetailByName(name);
 
-    // 验证用户名和密码
-    if (!staff || password !== staff.password) {
+    // 验证账号
+    if (!staff) {
+      return false;
+    }
+    // 验证密码
+    if (this.staffService.hashPassword(password, staff.staffId) !== staff.password) {
       return false;
     }
 

@@ -20,7 +20,7 @@ export class StaffService {
    * 密码加盐哈希
    * (以id为盐，进行PBKDF2运算)
    */
-  private hashPassword(password: string, id: string): string {
+  hashPassword(password: string, id: string): string {
     const key = CryptoJS.PBKDF2(password, id, {
       keySize: 512 / 32,
       iterations: passwordIterations,
@@ -85,6 +85,7 @@ export class StaffService {
     const staffToCreate = {
       ...staff,
       staffId,
+      password: this.hashPassword(staff.password, staffId),
     };
 
     return this.staffRepository.save(staffToCreate);
@@ -100,6 +101,9 @@ export class StaffService {
       ...staffToUpdate,
       ...staff,
     };
+    if (staff.password) {
+      staffToUpdate.password = this.hashPassword(staff.password, staffToUpdate.staffId);
+    }
     return this.staffRepository.save(staffToUpdate);
   }
 
