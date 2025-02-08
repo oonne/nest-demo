@@ -4,10 +4,14 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    private jwtService: JwtService,
+  ) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     // 如果设置了免登录，则直接返回true
@@ -18,8 +22,22 @@ export class AuthGuard implements CanActivate {
 
     // 判断JWT
     const request = context.switchToHttp().getRequest();
-    console.log('TODO 此处要写个鉴权守卫', request.headers);
+    const token = request.headers['authorization'];
+    if (!token) {
+      return false;
+    }
 
-    return true;
+    // 验证token
+    try {
+      const bearerToken = token.split(' ')[1];
+      const decoded = this.jwtService.verify(bearerToken);
+
+      // 将解码后的用户信息添加到请求对象中
+      request.staff = decoded;
+      return true;
+    } catch (error) {
+      console.log('JWT鉴权错误', error);
+      return false;
+    }
   }
 }

@@ -6,6 +6,7 @@ import { AuthGuard } from './common/guard/auth.guard';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { CatsModule } from './module/cats/cats.module';
 import { CatsController } from './module/cats/cats.controller';
+import { JwtModule } from './module/jwt/jwt.module';
 import { AuthModule } from './module/auth/auth.module';
 import { AuthController } from './module/auth/auth.controller';
 import { StaffModule } from './module/staff/staff.module';
@@ -42,6 +43,8 @@ import { StaffController } from './module/staff/staff.controller';
       }),
       inject: [ConfigService],
     }),
+    // JWT
+    JwtModule,
     // 子模块
     CatsModule,
     AuthModule,
