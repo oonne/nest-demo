@@ -1,7 +1,7 @@
 /*
  * 全局鉴权守卫
  */
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = request.headers['authorization'];
     if (!token) {
-      return false;
+      throw new UnauthorizedException('token为空');
     }
 
     // 验证token
@@ -36,8 +36,7 @@ export class AuthGuard implements CanActivate {
       request.staff = decoded;
       return true;
     } catch (error) {
-      console.log('JWT鉴权错误', error);
-      return false;
+      throw new UnauthorizedException(error);
     }
   }
 }
