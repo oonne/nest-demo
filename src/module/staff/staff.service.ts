@@ -1,8 +1,12 @@
+import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import config from '../../config';
 import { Staff } from './staff.entity';
 import { Like, In } from 'typeorm';
+
+const { passwordIterations } = config;
 
 @Injectable()
 export class StaffService {
@@ -10,6 +14,19 @@ export class StaffService {
     @InjectRepository(Staff)
     private staffRepository: Repository<Staff>,
   ) {}
+
+  /*
+   * 密码加盐哈希
+   * (以id为盐，进行PBKDF2运算)
+   */
+  private hashPassword(password: string, id: string): string {
+    const key = CryptoJS.PBKDF2(password, id, {
+      keySize: 512 / 32,
+      iterations: passwordIterations,
+    });
+
+    return key.toString(CryptoJS.enc['Hex']);
+  }
 
   /*
    * 查询全部(支持分页)
