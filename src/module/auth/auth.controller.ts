@@ -38,6 +38,17 @@ export class AuthController {
         message: '登录失败',
       };
     }
-    return resSuccess(res);
+
+    const { staff, token, refreshToken } = res;
+
+    // 过滤不显示的字段
+    delete staff.id;
+    delete staff.password;
+
+    return resSuccess({
+      staff,
+      token,
+      refreshToken,
+    });
   }
 }

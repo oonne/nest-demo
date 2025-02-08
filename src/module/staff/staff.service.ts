@@ -8,7 +8,7 @@ import { Staff } from './staff.entity';
 import { Like, In } from 'typeorm';
 
 const { passwordIterations } = config;
-const { generateId } = Utils;
+const { generateId, randomChars, createHash } = Utils;
 @Injectable()
 export class StaffService {
   constructor(
@@ -27,6 +27,32 @@ export class StaffService {
     });
 
     return key.toString(CryptoJS.enc['Hex']);
+  }
+
+  /*
+   * 校验refreshToken
+   */
+  async verifyRefreshToken({
+    staffId,
+    refreshToken,
+  }: {
+    staffId: string;
+    refreshToken: string;
+  }): Promise<boolean> {
+    const staff = await this.staffRepository.findOneBy({ staffId });
+    if (!staff) {
+      return false;
+    }
+    return staff.refreshToken === refreshToken;
+  }
+
+  /*
+   * 更新refreshToken
+   */
+  async generateRefreshToken(staffId: string): Promise<string> {
+    const refreshToken = createHash(randomChars(32), 32);
+    await this.staffRepository.update(staffId, { refreshToken });
+    return refreshToken;
   }
 
   /*

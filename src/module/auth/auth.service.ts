@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { StaffService } from '../staff/staff.service';
 import { Utils } from '../../utils/index';
-
 const { createHash } = Utils;
 
 @Injectable()
@@ -60,17 +59,22 @@ export class AuthService {
     if (this.staffService.hashPassword(password, staff.staffId) !== staff.password) {
       return false;
     }
+    // 验证账号是否被禁用
+    if (!staff.isActive) {
+      return false;
+    }
 
     // 生成JWT Token
     const token = await this.generateJwtToken(staff.staffId, staff.role);
 
     // 更新Refresh Token
-    // TODO
+    const refreshToken = await this.staffService.generateRefreshToken(staff.staffId);
 
     // 登录成功
     return {
-      token,
       staff,
+      token,
+      refreshToken,
     };
   }
 }
