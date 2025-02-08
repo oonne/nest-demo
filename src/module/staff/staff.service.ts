@@ -3,11 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import config from '../../config';
+import { Utils } from '../../utils/index';
 import { Staff } from './staff.entity';
 import { Like, In } from 'typeorm';
 
 const { passwordIterations } = config;
-
+const { generateId } = Utils;
 @Injectable()
 export class StaffService {
   constructor(
@@ -29,7 +30,7 @@ export class StaffService {
   }
 
   /*
-   * 查询全部(支持分页)
+   * 查询列表
    */
   async getList({
     pageNo = 1,
@@ -78,17 +79,28 @@ export class StaffService {
   }
 
   /* 新增 */
-  create(user: Partial<Staff>): Promise<Staff> {
-    return this.staffRepository.save(user);
+  create(staff: Partial<Staff>): Promise<Staff> {
+    // 生成随机的staffId
+    const staffId = generateId('staff');
+    const staffToCreate = {
+      ...staff,
+      staffId,
+    };
+
+    return this.staffRepository.save(staffToCreate);
   }
 
   /* 更新 */
-  async update(user: Partial<Staff>): Promise<Staff> {
-    const userToUpdate = await this.staffRepository.findOneBy({ staffId: user.staffId });
-    if (!userToUpdate) {
+  async update(staff: Partial<Staff>): Promise<Staff> {
+    let staffToUpdate = await this.staffRepository.findOneBy({ staffId: staff.staffId });
+    if (!staffToUpdate) {
       throw new Error('Staff not found');
     }
-    return this.staffRepository.save({ ...userToUpdate, ...user });
+    staffToUpdate = {
+      ...staffToUpdate,
+      ...staff,
+    };
+    return this.staffRepository.save(staffToUpdate);
   }
 
   /* 删除 */

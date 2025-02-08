@@ -11,8 +11,8 @@ const ErrorCode = {
   AUTH_LOGIN_FAILED: 10102,
 
   /* Staff模块 */
-  // 用户名必须唯一
-  STAFF_USERNAME_UNIQUE: 10201,
+  // 账号名必须唯一
+  STAFF_NAME_UNIQUE: 10201,
   // 用户不存在
   STAFF_NOT_FOUND: 10202,
 };
