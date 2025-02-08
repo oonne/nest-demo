@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { StaffService } from '../staff/staff.service';
 import { Utils } from '../../utils/index';
 
@@ -6,8 +7,14 @@ const { createHash } = Utils;
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly staffService: StaffService) {}
+  constructor(
+    private readonly staffService: StaffService,
+    private readonly jwtService: JwtService,
+  ) {}
 
+  /*
+   * 初始化管理员
+   */
   async init() {
     // 查询是否有staff
     const staff = await this.staffService.getList({
@@ -29,6 +36,18 @@ export class AuthService {
     return true;
   }
 
+  /*
+   * 生成JWT Token
+   */
+  private async generateJwtToken(staffId: string, role: number) {
+    const payload = { sub: staffId, role };
+    const token = await this.jwtService.signAsync(payload);
+    return token;
+  }
+
+  /*
+   * 登录
+   */
   async login({ name, password }: { name: string; password: string }) {
     // 查询用户
     const staff = await this.staffService.getDetailByName(name);
@@ -43,12 +62,15 @@ export class AuthService {
     }
 
     // 生成JWT Token
-    // TODO
+    const token = await this.generateJwtToken(staff.staffId, staff.role);
 
     // 更新Refresh Token
     // TODO
 
     // 登录成功
-    return staff;
+    return {
+      token,
+      staff,
+    };
   }
 }
