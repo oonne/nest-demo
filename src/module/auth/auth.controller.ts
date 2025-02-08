@@ -5,12 +5,27 @@ import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private configService: ConfigService,
   ) {}
+
+  @Post('init')
+  @NoLogin
+  async init() {
+    const res = await this.authService.init();
+
+    if (!res) {
+      return {
+        code: ErrorCode.STAFF_NOT_FOUND,
+        message: '无须初始化',
+      };
+    }
+    return resSuccess('初始化成功');
+  }
 
   @Post('login')
   @NoLogin
