@@ -5,7 +5,7 @@ import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-
+import { RefreshTokenDto } from './dto/token.dto';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -50,5 +50,21 @@ export class AuthController {
       token,
       refreshToken,
     });
+  }
+
+  /* 换票 */
+  @Post('refresh-token')
+  @NoLogin
+  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    const res = await this.authService.refreshToken(refreshTokenDto);
+
+    if (!res) {
+      return {
+        code: ErrorCode.AUTH_REFRESH_TOKEN_FAILED,
+        message: '换票失败',
+      };
+    }
+
+    return resSuccess(res);
   }
 }

@@ -9,6 +9,8 @@ const ErrorCode = {
   AUTH_NO_INIT: 10101,
   // 登录失败
   AUTH_LOGIN_FAILED: 10102,
+  // 换票失败
+  AUTH_REFRESH_TOKEN_FAILED: 10103,
 
   /* Staff模块 */
   // 账号名必须唯一

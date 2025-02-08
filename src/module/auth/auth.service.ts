@@ -77,4 +77,27 @@ export class AuthService {
       refreshToken,
     };
   }
+
+  /*
+   * 换票
+   */
+  async refreshToken({ staffId, refreshToken }: { staffId: string; refreshToken: string }) {
+    const staff = await this.staffService.getDetail(staffId);
+    if (!staff) {
+      return false;
+    }
+
+    const res = await this.staffService.verifyRefreshToken({ staffId, refreshToken });
+    if (!res) {
+      return false;
+    }
+
+    const newRefreshToken = await this.staffService.generateRefreshToken(staffId);
+    const newToken = await this.generateJwtToken(staffId, staff.role);
+
+    return {
+      token: newToken,
+      refreshToken: newRefreshToken,
+    };
+  }
 }
