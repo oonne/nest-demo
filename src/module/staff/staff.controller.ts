@@ -22,7 +22,7 @@ export class StaffController {
   ) {}
 
   /*
-   * 查询全部账号
+   * 查询账号列表
    */
   @Post('get-list')
   async getList(@Body() getListDto: GetListDto): Promise<HttpResponse<ListResponse<Staff>>> {

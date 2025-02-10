@@ -17,6 +17,10 @@ const ErrorCode = {
   STAFF_NAME_UNIQUE: 10201,
   // 用户不存在
   STAFF_NOT_FOUND: 10202,
+
+  /* Recycle模块 */
+  // 回收项不存在
+  RECYCLE_NOT_FOUND: 10301,
 };
 
 export default ErrorCode;
