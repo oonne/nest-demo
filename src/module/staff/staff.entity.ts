@@ -30,6 +30,12 @@ export class Staff {
   @Column({ comment: 'Refresh Token', length: 255, nullable: true })
   refreshToken: string;
 
+  @Column({ comment: '登录接口的pow的盐', length: 255, nullable: true })
+  loginPowSalt: string;
+
+  @Column({ comment: '登录接口的pow的结果', length: 255, nullable: true })
+  loginPowResult: string;
+
   @CreateDateColumn({ comment: '创建时间', nullable: false })
   createdAt: Date;
 

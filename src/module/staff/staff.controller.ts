@@ -41,6 +41,8 @@ export class StaffController {
       delete item.id;
       delete item.password;
       delete item.refreshToken;
+      delete item.loginPowSalt;
+      delete item.loginPowResult;
     });
 
     // 返回
@@ -68,6 +70,8 @@ export class StaffController {
     delete staff.id;
     delete staff.password;
     delete staff.refreshToken;
+    delete staff.loginPowSalt;
+    delete staff.loginPowResult;
 
     return resSuccess(staff);
   }

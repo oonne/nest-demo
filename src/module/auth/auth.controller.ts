@@ -4,7 +4,7 @@ import { NoLogin } from '../../common/decorator/auth.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
+import { GenerateLoginPowDto, LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/token.dto';
 @Controller('auth')
 export class AuthController {
@@ -13,6 +13,9 @@ export class AuthController {
     private configService: ConfigService,
   ) {}
 
+  /*
+   * 初始化
+   */
   @Post('init')
   @NoLogin
   async init() {
@@ -27,6 +30,19 @@ export class AuthController {
     return resSuccess('初始化成功');
   }
 
+  /*
+   * 生成登录pow的盐和结果
+   */
+  @Post('generate-login-pow')
+  @NoLogin
+  async generateLoginPow(@Body() generateLoginPowDto: GenerateLoginPowDto) {
+    const res = await this.authService.generateLoginPow(generateLoginPowDto);
+    return resSuccess(res);
+  }
+
+  /*
+   * 登录
+   */
   @Post('login')
   @NoLogin
   async login(@Body() loginDto: LoginDto) {
@@ -45,6 +61,8 @@ export class AuthController {
     delete staff.id;
     delete staff.password;
     delete staff.refreshToken;
+    delete staff.loginPowSalt;
+    delete staff.loginPowResult;
 
     return resSuccess({
       staff,
@@ -53,7 +71,9 @@ export class AuthController {
     });
   }
 
-  /* 换票 */
+  /*
+   * 换票
+   */
   @Post('refresh-token')
   @NoLogin
   async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {

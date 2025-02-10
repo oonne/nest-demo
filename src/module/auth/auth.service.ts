@@ -1,8 +1,10 @@
+import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { StaffService } from '../staff/staff.service';
 import { Utils } from '../../utils/index';
-const { createHash } = Utils;
+
+const { createHash, randomChars } = Utils;
 
 @Injectable()
 export class AuthService {
@@ -42,6 +44,31 @@ export class AuthService {
     const payload = { sub: staffId, role };
     const token = await this.jwtService.signAsync(payload);
     return token;
+  }
+
+  /*
+   * 生成登录pow
+   */
+  async generateLoginPow({ name }: { name: string }) {
+    const staff = await this.staffService.getDetailByName(name);
+    if (!staff) {
+      return {
+        salt: '',
+        result: '',
+      };
+    }
+
+    const input = randomChars(32);
+    const salt = randomChars(32);
+    const result = CryptoJS.SHA512(input + salt).toString();
+
+    await this.staffService.update({
+      ...staff,
+      loginPowSalt: salt,
+      loginPowResult: result,
+    });
+
+    return { salt, result };
   }
 
   /*
