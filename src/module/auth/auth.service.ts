@@ -1,11 +1,12 @@
 import * as CryptoJS from 'crypto-js';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import config from '../../config/index';
 import { StaffService } from '../staff/staff.service';
 import { Utils } from '../../utils/index';
 
 const { createHash, randomChars } = Utils;
-
+const { loginPowLength } = config;
 @Injectable()
 export class AuthService {
   constructor(
@@ -69,6 +70,22 @@ export class AuthService {
     });
 
     return { salt, result };
+  }
+
+  /*
+   * 验证登录pow
+   */
+  async verifyLoginPow({ powKey, name }: { powKey: string; name: string }) {
+    const staff = await this.staffService.getDetailByName(name);
+    if (!staff) {
+      return false;
+    }
+
+    const result = CryptoJS.SHA512(powKey + staff.loginPowSalt).toString();
+    if (result.slice(-loginPowLength) !== staff.loginPowResult.slice(-loginPowLength)) {
+      return false;
+    }
+    return true;
   }
 
   /*

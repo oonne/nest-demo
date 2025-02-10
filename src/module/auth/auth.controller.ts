@@ -46,6 +46,16 @@ export class AuthController {
   @Post('login')
   @NoLogin
   async login(@Body() loginDto: LoginDto) {
+    // 验证登录pow
+    const powRes = await this.authService.verifyLoginPow(loginDto);
+    if (!powRes) {
+      return {
+        code: ErrorCode.INVALID_REQUEST,
+        message: '非法请求',
+      };
+    }
+
+    // 登录
     const res = await this.authService.login(loginDto);
 
     if (!res) {

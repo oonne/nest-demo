@@ -2,7 +2,7 @@ import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import config from '../../config';
+import config from '../../config/index';
 import { Utils } from '../../utils/index';
 import { Staff } from './staff.entity';
 import { Like, In } from 'typeorm';
