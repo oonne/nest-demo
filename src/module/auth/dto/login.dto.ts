@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsString, Length } from 'class-validator';
 
 /* 生成登录pow的盐和结果 */
 export class GenerateLoginPowDto {
@@ -8,6 +8,10 @@ export class GenerateLoginPowDto {
 
 /* 登录 */
 export class LoginDto {
+  @IsString()
+  @Length(32, 32)
+  powKey: string;
+
   @IsString()
   name: string;
 

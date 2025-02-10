@@ -1,5 +1,5 @@
 import * as CryptoJS from 'crypto-js';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { StaffService } from '../staff/staff.service';
 import { Utils } from '../../utils/index';
@@ -58,12 +58,12 @@ export class AuthService {
       };
     }
 
-    const input = randomChars(32);
+    const powKey = randomChars(32);
     const salt = randomChars(32);
-    const result = CryptoJS.SHA512(input + salt).toString();
+    const result = CryptoJS.SHA512(powKey + salt).toString();
 
     await this.staffService.update({
-      ...staff,
+      staffId: staff.staffId,
       loginPowSalt: salt,
       loginPowResult: result,
     });
@@ -75,19 +75,24 @@ export class AuthService {
    * 登录
    */
   async login({ name, password }: { name: string; password: string }) {
+    const logger = new Logger();
+
     // 查询用户
     const staff = await this.staffService.getDetailByName(name);
 
     // 验证账号
     if (!staff) {
-      return false;
-    }
-    // 验证密码
-    if (this.staffService.hashPassword(password, staff.staffId) !== staff.password) {
+      logger.log(`登录失败，账号不存在: ${name}`);
       return false;
     }
     // 验证账号是否被禁用
     if (!staff.isActive) {
+      logger.log(`登录失败，账号被禁用: ${name}`);
+      return false;
+    }
+    // 验证密码
+    if (this.staffService.hashPassword(password, staff.staffId) !== staff.password) {
+      logger.log(`登录失败，密码错误: ${name}`);
       return false;
     }
 

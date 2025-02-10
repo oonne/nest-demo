@@ -43,7 +43,6 @@ export class CatsController {
 
   @Get(':id')
   findOne(@Param() params): HttpResponse<string> {
-    console.log(params.id);
     return resSuccess(`This action returns a #${params.id} cat`);
   }
 

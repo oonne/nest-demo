@@ -33,9 +33,9 @@ export class AuthController {
   /*
    * 生成登录pow的盐和结果
    */
-  @Post('generate-login-pow')
+  @Post('get-login-pow')
   @NoLogin
-  async generateLoginPow(@Body() generateLoginPowDto: GenerateLoginPowDto) {
+  async getLoginPow(@Body() generateLoginPowDto: GenerateLoginPowDto) {
     const res = await this.authService.generateLoginPow(generateLoginPowDto);
     return resSuccess(res);
   }
