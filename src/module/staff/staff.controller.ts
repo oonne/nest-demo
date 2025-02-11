@@ -1,8 +1,10 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import ErrorCode from '../../constant/error-code';
+import { roleList } from '../../constant/role';
 import { resSuccess } from '../../utils/index';
 import { HttpResponse, ListResponse } from '../../types/type';
+import { RecycleService } from '../recycle/recycle.service';
 import { StaffService } from './staff.service';
 import {
   GetListDto,
@@ -17,6 +19,7 @@ import { Staff } from './staff.entity';
 export class StaffController {
   constructor(
     private readonly StaffService: StaffService,
+    private readonly RecycleService: RecycleService,
     private configService: ConfigService,
   ) {}
 
@@ -124,7 +127,26 @@ export class StaffController {
       };
     }
 
-    const res = await this.StaffService.delete(deleteStaffDto.staffId);
-    return resSuccess(res);
+    // 加入到回收站
+    const role = roleList.find((item) => item.key === staff.role);
+    const content = `
+      账号ID：${staff.staffId} \n
+      账号名：${staff.name} \n
+      账号角色：${role.name} \n
+    `;
+    const recycle = await this.RecycleService.create({
+      type: 1,
+      content,
+    });
+    if (!recycle) {
+      return {
+        code: ErrorCode.RECYCLE_FAILED,
+        message: '回收失败',
+      };
+    }
+
+    // 删除
+    await this.StaffService.delete(deleteStaffDto.staffId);
+    return resSuccess(null);
   }
 }

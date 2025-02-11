@@ -15,10 +15,10 @@ const roleList: IRole[] = [
   },
 ];
 
-export default roleList;
-
 /* 角色key枚举 */
-export const roleKeyArr = roleList.map((item) => item.key);
+const roleKeyArr = roleList.map((item) => item.key);
 
 /* 角色说明文案 */
-export const roleDesc = roleList.map((item) => `${item.key} ${item.name} `).join(',');
+const roleDesc = roleList.map((item) => `${item.key} ${item.name} `).join(',');
+
+export { roleList, roleKeyArr, roleDesc };

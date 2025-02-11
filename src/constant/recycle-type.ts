@@ -11,10 +11,10 @@ const recycleTypeList: IRecycleType[] = [
   },
 ];
 
-export default recycleTypeList;
-
 /* 回收站类型key枚举 */
-export const recycleTypeKeyArr = recycleTypeList.map((item) => item.key);
+const recycleTypeKeyArr = recycleTypeList.map((item) => item.key);
 
 /* 回收站类型说明文案 */
-export const recycleTypeDesc = recycleTypeList.map((item) => `${item.key} ${item.name} `).join(',');
+const recycleTypeDesc = recycleTypeList.map((item) => `${item.key} ${item.name} `).join(',');
+
+export { recycleTypeList, recycleTypeKeyArr, recycleTypeDesc };
