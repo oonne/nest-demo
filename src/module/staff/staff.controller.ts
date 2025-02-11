@@ -1,6 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-// import { NoLogin } from '../../common/decorator/auth.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
 import { HttpResponse, ListResponse } from '../../types/type';

@@ -71,6 +71,8 @@ export class RecycleService {
     const recycleToCreate = {
       ...recycle,
       recycleId,
+      deleteStaffId: '占位',
+      deleteStaffName: '占位',
     };
 
     return this.recycleRepository.save(recycleToCreate);

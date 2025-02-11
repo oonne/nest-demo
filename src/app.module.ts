@@ -11,6 +11,8 @@ import { AuthModule } from './module/auth/auth.module';
 import { AuthController } from './module/auth/auth.controller';
 import { StaffModule } from './module/staff/staff.module';
 import { StaffController } from './module/staff/staff.controller';
+import { RecycleModule } from './module/recycle/recycle.module';
+import { RecycleController } from './module/recycle/recycle.controller';
 
 @Module({
   providers: [
@@ -49,6 +51,7 @@ import { StaffController } from './module/staff/staff.controller';
     CatsModule,
     AuthModule,
     StaffModule,
+    RecycleModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -56,5 +59,6 @@ export class AppModule implements NestModule {
     consumer.apply(LoggerMiddleware).forRoutes(CatsController);
     consumer.apply(LoggerMiddleware).forRoutes(AuthController);
     consumer.apply(LoggerMiddleware).forRoutes(StaffController);
+    consumer.apply(LoggerMiddleware).forRoutes(RecycleController);
   }
 }
