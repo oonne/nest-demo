@@ -42,7 +42,7 @@ export class AuthService {
    * 生成JWT Token
    */
   private async generateJwtToken(staffId: string, role: number) {
-    const payload = { sub: staffId, role };
+    const payload = { staffId: staffId, role };
     const token = await this.jwtService.signAsync(payload);
     return token;
   }

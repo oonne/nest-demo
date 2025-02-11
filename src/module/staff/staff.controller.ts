@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Req } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import ErrorCode from '../../constant/error-code';
 import { roleList } from '../../constant/role';
@@ -118,7 +118,10 @@ export class StaffController {
    * 删除账号
    */
   @Post('delete')
-  async delete(@Body() deleteStaffDto: DeleteStaffDto): Promise<HttpResponse<any>> {
+  async delete(
+    @Body() deleteStaffDto: DeleteStaffDto,
+    @Req() req: Request,
+  ): Promise<HttpResponse<any>> {
     const staff = await this.StaffService.getDetail(deleteStaffDto.staffId);
     if (!staff) {
       return {
@@ -130,13 +133,14 @@ export class StaffController {
     // 加入到回收站
     const role = roleList.find((item) => item.key === staff.role);
     const content = `
-      账号ID：${staff.staffId} \n
-      账号名：${staff.name} \n
-      账号角色：${role.name} \n
+      账号ID：${staff.staffId}
+      账号名：${staff.name}
+      账号角色：${role.name}
     `;
     const recycle = await this.RecycleService.create({
       type: 1,
       content,
+      deleteStaffId: req['staff']?.staffId,
     });
     if (!recycle) {
       return {

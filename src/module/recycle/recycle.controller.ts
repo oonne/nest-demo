@@ -25,9 +25,10 @@ export class RecycleController {
       deleteStaffName: getListDto.deleteStaffName,
     });
 
-    // 过滤不显示的字段
+    // 返回字段处理
     items.forEach((item) => {
       delete item.id;
+      item.content = item.content.slice(0, 100);
     });
 
     return resSuccess({

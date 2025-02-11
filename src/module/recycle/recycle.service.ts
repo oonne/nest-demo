@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Utils } from '../../utils/index';
+import { StaffService } from '../staff/staff.service';
 import { Recycle } from './recycle.entity';
 import { Like, In } from 'typeorm';
 
@@ -12,6 +13,7 @@ export class RecycleService {
   constructor(
     @InjectRepository(Recycle)
     private recycleRepository: Repository<Recycle>,
+    private staffService: StaffService,
   ) {}
 
   /*
@@ -66,13 +68,21 @@ export class RecycleService {
       return this.create(recycle);
     }
 
-    // 获取当前账号 TODO
+    // 获取删除者账号
+    const deleteStaffId = recycle.deleteStaffId ?? '';
+    let deleteStaffName = '';
+    if (deleteStaffId) {
+      const staff = await this.staffService.getDetail(deleteStaffId);
+      if (staff) {
+        deleteStaffName = staff.name;
+      }
+    }
 
     const recycleToCreate = {
       ...recycle,
       recycleId,
-      deleteStaffId: '占位',
-      deleteStaffName: '占位',
+      deleteStaffId,
+      deleteStaffName,
     };
 
     return this.recycleRepository.save(recycleToCreate);
