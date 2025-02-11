@@ -1,5 +1,6 @@
 import { Controller, Post, Body, Req } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Roles } from '../../common/decorator/roles.decorator';
 import ErrorCode from '../../constant/error-code';
 import { roleList } from '../../constant/role';
 import { resSuccess } from '../../utils/index';
@@ -28,6 +29,7 @@ export class StaffController {
    * 查询账号列表
    */
   @Post('get-list')
+  @Roles([1])
   async getList(@Body() getListDto: GetListDto): Promise<HttpResponse<ListResponse<Staff>>> {
     const { items, total } = await this.StaffService.getList({
       pageNo: getListDto.pageNo,
@@ -59,6 +61,7 @@ export class StaffController {
    * 根据staffId查询单个
    */
   @Post('get-detail')
+  @Roles([1])
   async getDetail(@Body() getDetailDto: GetDetailDto): Promise<HttpResponse<any>> {
     const staff = await this.StaffService.getDetail(getDetailDto.staffId);
     if (!staff) {
@@ -81,6 +84,7 @@ export class StaffController {
    * 更新refreshToken
    */
   @Post('update-refresh-token')
+  @Roles([1])
   async updateRefreshToken(
     @Body() updateRefreshTokenDto: UpdateRefreshTokenDto,
   ): Promise<HttpResponse<any>> {
@@ -92,6 +96,7 @@ export class StaffController {
    * 新增账号
    */
   @Post('add')
+  @Roles([1])
   async add(@Body() createStaffDto: CreateStaffDto): Promise<HttpResponse<any>> {
     // 校验用户名唯一
     const sameNameStaff = await this.StaffService.getDetailByName(createStaffDto.name);
@@ -111,6 +116,7 @@ export class StaffController {
    * 更新账号
    */
   @Post('update')
+  @Roles([1])
   async update(@Body() updateStaffDto: UpdateStaffDto): Promise<HttpResponse<any>> {
     const staff = await this.StaffService.getDetail(updateStaffDto.staffId);
     if (!staff) {
@@ -128,6 +134,7 @@ export class StaffController {
    * 删除账号
    */
   @Post('delete')
+  @Roles([1])
   async delete(
     @Body() deleteStaffDto: DeleteStaffDto,
     @Req() req: Request,

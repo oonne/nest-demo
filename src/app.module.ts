@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from './common/guard/auth.guard';
+import { RoleGuard } from './common/guard/role.guard';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { CatsModule } from './module/cats/cats.module';
 import { CatsController } from './module/cats/cats.controller';
@@ -22,6 +23,11 @@ import { RecycleController } from './module/recycle/recycle.controller';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    // 角色校验守卫
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
     },
   ],
   imports: [
