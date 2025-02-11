@@ -37,6 +37,12 @@ export class GetDetailDto {
   staffId: string;
 }
 
+/* 更新 refreshToken */
+export class UpdateRefreshTokenDto {
+  @IsString()
+  staffId: string;
+}
+
 /* 新建 staff */
 export class CreateStaffDto {
   @IsString()

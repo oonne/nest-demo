@@ -9,6 +9,7 @@ import { StaffService } from './staff.service';
 import {
   GetListDto,
   GetDetailDto,
+  UpdateRefreshTokenDto,
   CreateStaffDto,
   UpdateStaffDto,
   DeleteStaffDto,
@@ -42,7 +43,6 @@ export class StaffController {
     items.forEach((item) => {
       delete item.id;
       delete item.password;
-      delete item.refreshToken;
       delete item.loginPowSalt;
       delete item.loginPowResult;
     });
@@ -71,11 +71,21 @@ export class StaffController {
     // 过滤不显示的字段
     delete staff.id;
     delete staff.password;
-    delete staff.refreshToken;
     delete staff.loginPowSalt;
     delete staff.loginPowResult;
 
     return resSuccess(staff);
+  }
+
+  /*
+   * 更新refreshToken
+   */
+  @Post('update-refresh-token')
+  async updateRefreshToken(
+    @Body() updateRefreshTokenDto: UpdateRefreshTokenDto,
+  ): Promise<HttpResponse<any>> {
+    const res = await this.StaffService.generateRefreshToken(updateRefreshTokenDto.staffId);
+    return resSuccess(res);
   }
 
   /*
