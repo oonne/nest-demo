@@ -5,8 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthGuard } from './common/guard/auth.guard';
 import { RoleGuard } from './common/guard/role.guard';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { CatsModule } from './module/cats/cats.module';
-import { CatsController } from './module/cats/cats.controller';
 import { JwtModule } from './module/jwt/jwt.module';
 import { AuthModule } from './module/auth/auth.module';
 import { AuthController } from './module/auth/auth.controller';
@@ -54,7 +52,6 @@ import { RecycleController } from './module/recycle/recycle.controller';
     // JWT
     JwtModule,
     // 子模块
-    CatsModule,
     AuthModule,
     StaffModule,
     RecycleModule,
@@ -62,7 +59,6 @@ import { RecycleController } from './module/recycle/recycle.controller';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes(CatsController);
     consumer.apply(LoggerMiddleware).forRoutes(AuthController);
     consumer.apply(LoggerMiddleware).forRoutes(StaffController);
     consumer.apply(LoggerMiddleware).forRoutes(RecycleController);
