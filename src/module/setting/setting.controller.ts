@@ -1,8 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Req } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Roles } from '../../common/decorator/roles.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
 import { HttpResponse, ListResponse } from '../../types/type';
+import { RecycleService } from '../recycle/recycle.service';
 import { SettingService } from './setting.service';
 import {
   GetListDto,
@@ -15,7 +17,11 @@ import { Setting } from './setting.entity';
 
 @Controller('setting')
 export class SettingController {
-  constructor(private readonly settingService: SettingService) {}
+  constructor(
+    private readonly settingService: SettingService,
+    private readonly RecycleService: RecycleService,
+    private configService: ConfigService,
+  ) {}
 
   /*
    * 查询设置列表
@@ -122,12 +128,34 @@ export class SettingController {
    */
   @Post('delete')
   @Roles([1])
-  async delete(@Body() deleteSettingDto: DeleteSettingDto): Promise<HttpResponse<any>> {
+  async delete(
+    @Body() deleteSettingDto: DeleteSettingDto,
+    @Req() req: Request,
+  ): Promise<HttpResponse<any>> {
     const setting = await this.settingService.getDetail(deleteSettingDto.settingId);
     if (!setting) {
       return {
         code: ErrorCode.SETTING_NOT_FOUND,
         message: '设置不存在',
+      };
+    }
+
+    // 加入到回收站
+    const content = `
+      设置ID: ${setting.settingId}
+      设置key: ${setting.key}
+      设置value: ${setting.value}
+      设置备注: ${setting.remark}
+    `;
+    const recycle = await this.RecycleService.create({
+      type: 2,
+      content,
+      deleteStaffId: req['staff']?.staffId,
+    });
+    if (!recycle) {
+      return {
+        code: ErrorCode.RECYCLE_FAILED,
+        message: '回收失败',
       };
     }
 
