@@ -3,9 +3,11 @@ import { ConfigService } from '@nestjs/config';
 import { NoLogin } from '../../common/decorator/auth.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
+import type { HttpResponse } from '../../types/type';
 import { AuthService } from './auth.service';
 import { GenerateLoginPowDto, LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/token.dto';
+
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -18,7 +20,7 @@ export class AuthController {
    */
   @Post('init')
   @NoLogin
-  async init() {
+  async init(): Promise<HttpResponse<any>> {
     const res = await this.authService.init();
 
     if (!res) {
@@ -35,7 +37,7 @@ export class AuthController {
    */
   @Post('get-login-pow')
   @NoLogin
-  async getLoginPow(@Body() generateLoginPowDto: GenerateLoginPowDto) {
+  async getLoginPow(@Body() generateLoginPowDto: GenerateLoginPowDto): Promise<HttpResponse<any>> {
     const res = await this.authService.generateLoginPow(generateLoginPowDto);
     return resSuccess(res);
   }
@@ -45,7 +47,7 @@ export class AuthController {
    */
   @Post('login')
   @NoLogin
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body() loginDto: LoginDto): Promise<HttpResponse<any>> {
     // 验证登录pow
     const powRes = await this.authService.verifyLoginPow(loginDto);
     if (!powRes) {
@@ -86,7 +88,7 @@ export class AuthController {
    */
   @Post('refresh-token')
   @NoLogin
-  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<HttpResponse<any>> {
     const res = await this.authService.refreshToken(refreshTokenDto);
 
     if (!res) {

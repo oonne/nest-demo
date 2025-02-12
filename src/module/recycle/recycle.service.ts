@@ -54,12 +54,16 @@ export class RecycleService {
     };
   }
 
-  /* 根据recycleId查询单个 */
+  /*
+   * 根据recycleId查询单个
+   */
   getDetail(recycleId: string): Promise<Recycle> {
     return this.recycleRepository.findOneBy({ recycleId });
   }
 
-  /* 新增 */
+  /*
+   * 新增
+   */
   async create(recycle: Partial<Recycle>): Promise<Recycle> {
     const recycleId = generateId('recycle');
     // 如果recycleId已存在，则重新生成
@@ -87,7 +91,9 @@ export class RecycleService {
     return this.recycleRepository.save(recycleToCreate);
   }
 
-  /* 删除 */
+  /*
+   * 删除
+   */
   async delete(recycleId: string): Promise<void> {
     await this.recycleRepository.delete({ recycleId });
   }

@@ -1,10 +1,10 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
-import { HttpResponse, ListResponse } from '../../types/type';
+import type { HttpResponse, ListResponse } from '../../types/type';
 import { RecycleService } from './recycle.service';
 import { GetListDto, GetDetailDto, DeleteRecycleDto } from './dto/recycle.dto';
-import { Recycle } from './recycle.entity';
+import type { Recycle } from './recycle.entity';
 
 @Controller('recycle')
 export class RecycleController {

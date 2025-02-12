@@ -4,7 +4,7 @@ import { Roles } from '../../common/decorator/roles.decorator';
 import ErrorCode from '../../constant/error-code';
 import { roleList } from '../../constant/role';
 import { resSuccess } from '../../utils/index';
-import { HttpResponse, ListResponse } from '../../types/type';
+import type { HttpResponse, ListResponse } from '../../types/type';
 import { RecycleService } from '../recycle/recycle.service';
 import { StaffService } from './staff.service';
 import {
@@ -15,7 +15,7 @@ import {
   UpdateStaffDto,
   DeleteStaffDto,
 } from './dto/staff.dto';
-import { Staff } from './staff.entity';
+import type { Staff } from './staff.entity';
 
 @Controller('staff')
 export class StaffController {
@@ -161,9 +161,9 @@ export class StaffController {
     // 加入到回收站
     const role = roleList.find((item) => item.key === staff.role);
     const content = `
-      账号ID：${staff.staffId}
-      账号名：${staff.name}
-      账号角色：${role.name}
+      账号ID: ${staff.staffId}
+      账号名: ${staff.name}
+      账号角色: ${role.name}
     `;
     const recycle = await this.RecycleService.create({
       type: 1,

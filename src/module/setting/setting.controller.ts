@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Roles } from '../../common/decorator/roles.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
-import { HttpResponse, ListResponse } from '../../types/type';
+import type { HttpResponse, ListResponse } from '../../types/type';
 import { RecycleService } from '../recycle/recycle.service';
 import { SettingService } from './setting.service';
 import {
@@ -13,7 +13,7 @@ import {
   UpdateSettingDto,
   DeleteSettingDto,
 } from './dto/setting.dto';
-import { Setting } from './setting.entity';
+import type { Setting } from './setting.entity';
 
 @Controller('setting')
 export class SettingController {

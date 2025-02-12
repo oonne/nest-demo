@@ -52,17 +52,23 @@ export class SettingService {
     };
   }
 
-  /* 根据settingId查询单个 */
+  /*
+   * 根据settingId查询单个
+   */
   getDetail(settingId: string): Promise<Setting> {
     return this.settingRepository.findOneBy({ settingId });
   }
 
-  /* 根据key查询单个 */
+  /*
+   * 根据key查询单个
+   */
   getDetailByKey(key: string): Promise<Setting> {
     return this.settingRepository.findOneBy({ key });
   }
 
-  /* 新增 */
+  /*
+   * 新增
+   */
   async create(setting: Partial<Setting>): Promise<Setting> {
     const settingId = generateId('setting');
     if (await this.settingRepository.findOneBy({ settingId })) {
@@ -77,7 +83,9 @@ export class SettingService {
     return this.settingRepository.save(settingToCreate);
   }
 
-  /* 更新 */
+  /*
+   * 更新
+   */
   async update(setting: Partial<Setting>): Promise<Setting> {
     let settingToUpdate = await this.settingRepository.findOneBy({ settingId: setting.settingId });
     if (!settingToUpdate) {
@@ -92,7 +100,9 @@ export class SettingService {
     return this.settingRepository.save(settingToUpdate);
   }
 
-  /* 删除 */
+  /*
+   * 删除
+   */
   async delete(settingId: string): Promise<void> {
     await this.settingRepository.delete({ settingId });
   }

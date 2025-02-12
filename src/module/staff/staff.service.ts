@@ -102,17 +102,23 @@ export class StaffService {
     };
   }
 
-  /* 根据staffId查询单个 */
+  /*
+   * 根据staffId查询单个
+   */
   getDetail(staffId: string): Promise<Staff> {
     return this.staffRepository.findOneBy({ staffId });
   }
 
-  /* 根据name查询单个 */
+  /*
+   * 根据name查询单个
+   */
   getDetailByName(name: string): Promise<Staff> {
     return this.staffRepository.findOneBy({ name });
   }
 
-  /* 新增 */
+  /*
+   * 新增
+   */
   async create(staff: Partial<Staff>): Promise<Staff> {
     // 生成随机的staffId
     const staffId = generateId('staff');
@@ -130,7 +136,9 @@ export class StaffService {
     return this.staffRepository.save(staffToCreate);
   }
 
-  /* 更新 */
+  /*
+   * 更新
+   */
   async update(staff: Partial<Staff>): Promise<Staff> {
     let staffToUpdate = await this.staffRepository.findOneBy({ staffId: staff.staffId });
     if (!staffToUpdate) {
@@ -146,7 +154,9 @@ export class StaffService {
     return this.staffRepository.save(staffToUpdate);
   }
 
-  /* 删除 */
+  /*
+   * 删除
+   */
   async delete(staffId: string): Promise<void> {
     await this.staffRepository.delete({ staffId });
   }
