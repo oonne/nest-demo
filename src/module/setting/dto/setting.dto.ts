@@ -1,6 +1,6 @@
 import { IsString, IsOptional, IsIn, IsInt } from 'class-validator';
 
-/* 查询配置列表 */
+/* 查询设置列表 */
 export class GetListDto {
   @IsInt()
   pageNo: number;
@@ -29,14 +29,14 @@ export class GetListDto {
   sortOrder?: string;
 }
 
-/* 查询单个配置 */
+/* 查询单个设置 */
 export class GetDetailDto {
   @IsString()
-  configId: string;
+  settingId: string;
 }
 
-/* 新建配置 */
-export class CreateConfigDto {
+/* 新建设置 */
+export class CreateSettingDto {
   @IsString()
   key: string;
 
@@ -48,10 +48,10 @@ export class CreateConfigDto {
   remark?: string;
 }
 
-/* 更新配置 */
-export class UpdateConfigDto {
+/* 更新设置 */
+export class UpdateSettingDto {
   @IsString()
-  configId: string;
+  settingId: string;
 
   @IsOptional()
   @IsString()
@@ -66,8 +66,8 @@ export class UpdateConfigDto {
   remark?: string;
 }
 
-/* 删除配置 */
-export class DeleteConfigDto {
+/* 删除设置 */
+export class DeleteSettingDto {
   @IsString()
-  configId: string;
+  settingId: string;
 }

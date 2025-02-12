@@ -7,12 +7,12 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Config {
+export class Setting {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: 'configId', nullable: false, unique: true })
-  configId: string;
+  @Column({ comment: 'settingId', nullable: false, unique: true })
+  settingId: string;
 
   @Column({ comment: 'key', length: 255, nullable: false, unique: true })
   key: string;

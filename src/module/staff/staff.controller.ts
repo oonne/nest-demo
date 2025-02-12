@@ -137,8 +137,8 @@ export class StaffController {
       }
     }
 
-    const arr = this.StaffService.update(updateStaffDto);
-    return resSuccess(arr);
+    const res = await this.StaffService.update(updateStaffDto);
+    return resSuccess(res);
   }
 
   /*

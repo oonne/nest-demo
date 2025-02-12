@@ -3,27 +3,29 @@ import { Roles } from '../../common/decorator/roles.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
 import { HttpResponse, ListResponse } from '../../types/type';
-import { ConfigService } from './config.service';
+import { SettingService } from './setting.service';
 import {
   GetListDto,
   GetDetailDto,
-  CreateConfigDto,
-  UpdateConfigDto,
-  DeleteConfigDto,
-} from './dto/config.dto';
-import { Config } from './config.entity';
+  CreateSettingDto,
+  UpdateSettingDto,
+  DeleteSettingDto,
+} from './dto/setting.dto';
+import { Setting } from './setting.entity';
 
-@Controller('config')
-export class ConfigController {
-  constructor(private readonly ConfigService: ConfigService) {}
+@Controller('setting')
+export class SettingController {
+  constructor(private readonly settingService: SettingService) {}
 
   /*
    * 查询设置列表
    */
   @Post('get-list')
   @Roles([1])
-  async getList(@Body() getListDto: GetListDto): Promise<HttpResponse<ListResponse<Config>>> {
-    const { items, total } = await this.ConfigService.getList({
+  async getList(@Body() getListDto: GetListDto): Promise<HttpResponse<ListResponse<Setting>>> {
+    const { items, total } = await this.settingService.getList({
+      pageNo: getListDto.pageNo,
+      pageSize: getListDto.pageSize,
       sortField: getListDto.sortField,
       sortOrder: getListDto.sortOrder,
       key: getListDto.key,
@@ -55,8 +57,8 @@ export class ConfigController {
   @Post('get-detail')
   @Roles([1])
   async getDetail(@Body() getDetailDto: GetDetailDto): Promise<HttpResponse<any>> {
-    const config = await this.ConfigService.getDetail(getDetailDto.configId);
-    if (!config) {
+    const setting = await this.settingService.getDetail(getDetailDto.settingId);
+    if (!setting) {
       return {
         code: ErrorCode.SETTING_NOT_FOUND,
         message: '设置不存在',
@@ -64,9 +66,9 @@ export class ConfigController {
     }
 
     // 返回字段处理
-    delete config.id;
+    delete setting.id;
 
-    return resSuccess(config);
+    return resSuccess(setting);
   }
 
   /*
@@ -74,18 +76,16 @@ export class ConfigController {
    */
   @Post('add')
   @Roles([1])
-  async add(@Body() createConfigDto: CreateConfigDto): Promise<HttpResponse<any>> {
-    // 校验key唯一
-    const sameKeyConfig = await this.ConfigService.getDetailByKey(createConfigDto.key);
-    if (sameKeyConfig) {
+  async add(@Body() createSettingDto: CreateSettingDto): Promise<HttpResponse<any>> {
+    const sameKeySetting = await this.settingService.getDetailByKey(createSettingDto.key);
+    if (sameKeySetting) {
       return {
         code: ErrorCode.SETTING_KEY_UNIQUE,
         message: '设置键必须唯一',
       };
     }
 
-    const res = await this.ConfigService.create(createConfigDto);
-
+    const res = await this.settingService.create(createSettingDto);
     return resSuccess(res);
   }
 
@@ -94,19 +94,18 @@ export class ConfigController {
    */
   @Post('update')
   @Roles([1])
-  async update(@Body() updateConfigDto: UpdateConfigDto): Promise<HttpResponse<any>> {
-    const config = await this.ConfigService.getDetail(updateConfigDto.configId);
-    if (!config) {
+  async update(@Body() updateSettingDto: UpdateSettingDto): Promise<HttpResponse<any>> {
+    const setting = await this.settingService.getDetail(updateSettingDto.settingId);
+    if (!setting) {
       return {
         code: ErrorCode.SETTING_NOT_FOUND,
         message: '设置不存在',
       };
     }
 
-    // 如果修改了key，校验唯一性
-    if (updateConfigDto.key && updateConfigDto.key !== config.key) {
-      const sameKeyConfig = await this.ConfigService.getDetailByKey(updateConfigDto.key);
-      if (sameKeyConfig) {
+    if (updateSettingDto.key && updateSettingDto.key !== setting.key) {
+      const sameKeySetting = await this.settingService.getDetailByKey(updateSettingDto.key);
+      if (sameKeySetting) {
         return {
           code: ErrorCode.SETTING_KEY_UNIQUE,
           message: '设置键必须唯一',
@@ -114,8 +113,7 @@ export class ConfigController {
       }
     }
 
-    const res = await this.ConfigService.update(updateConfigDto);
-
+    const res = await this.settingService.update(updateSettingDto);
     return resSuccess(res);
   }
 
@@ -124,17 +122,16 @@ export class ConfigController {
    */
   @Post('delete')
   @Roles([1])
-  async delete(@Body() deleteConfigDto: DeleteConfigDto): Promise<HttpResponse<any>> {
-    const config = await this.ConfigService.getDetail(deleteConfigDto.configId);
-    if (!config) {
+  async delete(@Body() deleteSettingDto: DeleteSettingDto): Promise<HttpResponse<any>> {
+    const setting = await this.settingService.getDetail(deleteSettingDto.settingId);
+    if (!setting) {
       return {
         code: ErrorCode.SETTING_NOT_FOUND,
         message: '设置不存在',
       };
     }
 
-    // 删除
-    await this.ConfigService.delete(deleteConfigDto.configId);
+    await this.settingService.delete(deleteSettingDto.settingId);
     return resSuccess(null);
   }
 }
