@@ -4,7 +4,7 @@ import { Roles } from '../../common/decorator/roles.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess } from '../../utils/index';
 import type { HttpResponse, ListResponse } from '../../types/type';
-import { GetListDto, DeleteFileDto } from './dto/file.dto';
+import { GetListDto, GetDetailDto, DeleteFileDto } from './dto/file.dto';
 import { FileService } from './file.service';
 import type { File } from './file.entity';
 
@@ -26,8 +26,8 @@ export class FileController {
       pageSize: getListDto.pageSize,
       sortField: getListDto.sortField,
       sortOrder: getListDto.sortOrder,
-      fileName: getListDto.fileName,
       type: getListDto.type,
+      fileName: getListDto.fileName,
     });
 
     // 返回字段处理
@@ -42,6 +42,26 @@ export class FileController {
     });
   }
 
+  /*
+   * 查询单个
+   */
+  @Post('get-detail')
+  @Roles([1])
+  async getDetail(@Body() getDetailDto: GetDetailDto): Promise<HttpResponse<any>> {
+    const file = await this.fileService.getDetail(getDetailDto.fileId);
+    if (!file) {
+      return {
+        code: ErrorCode.FILE_NOT_FOUND,
+        message: '文件不存在',
+      };
+    }
+
+    return resSuccess(file);
+  }
+
+  /*
+   * 删除
+   */
   @Post('delete')
   @Roles([1])
   async delete(@Body() deleteFileDto: DeleteFileDto): Promise<HttpResponse<any>> {
