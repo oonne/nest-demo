@@ -23,7 +23,7 @@ export class RoleGuard implements CanActivate {
 
     // 如果没有用户信息，说明未经过 AuthGuard 验证，抛出异常
     if (!staff) {
-      throw new ForbiddenException('未登录用户');
+      throw new ForbiddenException('未登录');
     }
 
     // 验证用户角色是否在允许的角色列表中
