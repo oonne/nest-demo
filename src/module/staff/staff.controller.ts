@@ -41,7 +41,7 @@ export class StaffController {
       isActive: getListDto.isActive,
     });
 
-    // 过滤不显示的字段
+    // 返回字段处理
     items.forEach((item) => {
       delete item.id;
       delete item.password;
@@ -71,7 +71,7 @@ export class StaffController {
       };
     }
 
-    // 过滤不显示的字段
+    // 返回字段处理
     delete staff.id;
     delete staff.password;
     delete staff.loginPowSalt;
@@ -124,6 +124,17 @@ export class StaffController {
         code: ErrorCode.STAFF_NOT_FOUND,
         message: '账号不存在',
       };
+    }
+
+    // 校验用户名唯一
+    if (updateStaffDto.name && updateStaffDto.name !== staff.name) {
+      const sameNameStaff = await this.StaffService.getDetailByName(updateStaffDto.name);
+      if (sameNameStaff) {
+        return {
+          code: ErrorCode.STAFF_NAME_UNIQUE,
+          message: '账号名已存在',
+        };
+      }
     }
 
     const arr = this.StaffService.update(updateStaffDto);

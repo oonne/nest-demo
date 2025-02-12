@@ -67,7 +67,7 @@ export class AuthController {
 
     const { staff, token, refreshToken } = res;
 
-    // 过滤不显示的字段
+    // 返回字段处理
     delete staff.id;
     delete staff.password;
     delete staff.refreshToken;

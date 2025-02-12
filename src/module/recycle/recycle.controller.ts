@@ -28,7 +28,9 @@ export class RecycleController {
     // 返回字段处理
     items.forEach((item) => {
       delete item.id;
-      item.content = item.content.slice(0, 100);
+      if (item.content.length > 100) {
+        item.content = `${item.content.slice(0, 100)}...`;
+      }
     });
 
     return resSuccess({
@@ -51,7 +53,7 @@ export class RecycleController {
       };
     }
 
-    // 过滤不显示的字段
+    // 返回字段处理
     delete recycle.id;
 
     return resSuccess(recycle);

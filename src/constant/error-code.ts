@@ -29,6 +29,14 @@ const ErrorCode = {
   RECYCLE_NOT_FOUND: 10301,
   // 回收失败
   RECYCLE_FAILED: 10302,
+
+  /*
+   * Setting模块
+   */
+  // 设置不存在
+  SETTING_NOT_FOUND: 10401,
+  // 设置键必须唯一
+  SETTING_KEY_UNIQUE: 10402,
 };
 
 export default ErrorCode;

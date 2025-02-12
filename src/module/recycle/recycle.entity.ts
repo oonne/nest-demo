@@ -18,7 +18,7 @@ export class Recycle {
   @Column({ comment: `类型: ${recycleTypeDesc}`, type: 'int', nullable: false })
   type: number;
 
-  @Column({ comment: '内容', type: 'longtext', nullable: false })
+  @Column({ comment: '内容', type: 'mediumtext', nullable: false })
   content: string;
 
   @Column({ comment: '删除者', length: 255, nullable: false })

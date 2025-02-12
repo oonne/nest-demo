@@ -9,6 +9,10 @@ const recycleTypeList: IRecycleType[] = [
     key: 1,
     name: '账号',
   },
+  {
+    key: 2,
+    name: '配置',
+  },
 ];
 
 /* 回收站类型key枚举 */
