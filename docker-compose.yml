@@ -6,7 +6,6 @@ services:
     build:
       context: .  # 使用当前目录作为构建上下文
       dockerfile: Dockerfile
-    container_name: nest_demo
     restart: always  # 容器崩溃时自动重启
     ports:
       - "10011:10011"  # 映射应用端口
