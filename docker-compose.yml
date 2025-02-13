@@ -1,0 +1,16 @@
+name: nest_demo
+
+services:
+  # Node应用服务配置
+  nest_demo:
+    build:
+      context: .  # 使用当前目录作为构建上下文
+      dockerfile: Dockerfile
+    container_name: nest_demo
+    restart: always  # 容器崩溃时自动重启
+    ports:
+      - "10011:10011"  # 映射应用端口
+    environment:
+      # - NODE_ENV=production
+      # 使用宿主机的网络，可以通过 host.docker.internal 访问宿主机的服务
+      - DB_HOST=host.docker.internal 
