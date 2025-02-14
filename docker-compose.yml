@@ -13,3 +13,6 @@ services:
       # - NODE_ENV=production
       # 使用宿主机的网络，可以通过 host.docker.internal 访问宿主机的服务
       - DB_HOST=host.docker.internal 
+    # 输出日志
+    volumes:
+      - /Users/jay/dev/nest_demo/logs:/app/logs
