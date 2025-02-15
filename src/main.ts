@@ -6,6 +6,7 @@ import { Logger } from '@nestjs/common';
 import * as winston from 'winston';
 import { WinstonModule } from 'nest-winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
+import * as compression from '@fastify/compress';
 import { AllExceptionsFilter } from './common/filter/any-exception.filter';
 import { ValidationPipe } from './common/pipe/validate.pipe';
 import { AppModule } from './app.module';
@@ -58,6 +59,9 @@ const startNest = async () => {
 
   // CORS
   app.enableCors();
+
+  // 压缩
+  await app.register(compression);
 
   // 监听
   await app.listen(port, '0.0.0.0');

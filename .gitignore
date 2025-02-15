@@ -12,6 +12,9 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# 文件上传
+/files_storage
+
 # OS
 .DS_Store
 
