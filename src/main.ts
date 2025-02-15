@@ -7,6 +7,7 @@ import * as winston from 'winston';
 import { WinstonModule } from 'nest-winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 import * as compression from '@fastify/compress';
+import multipart from '@fastify/multipart';
 import { AllExceptionsFilter } from './common/filter/any-exception.filter';
 import { ValidationPipe } from './common/pipe/validate.pipe';
 import { AppModule } from './app.module';
@@ -62,6 +63,9 @@ const startNest = async () => {
 
   // 压缩
   await app.register(compression);
+
+  // 文件上传 multipart
+  await app.register(multipart);
 
   // 监听
   await app.listen(port, '0.0.0.0');

@@ -7,6 +7,7 @@ import { Utils } from '../../utils/index';
 
 const { createHash, randomChars } = Utils;
 const { loginPowLength } = config;
+
 @Injectable()
 export class AuthService {
   constructor(

@@ -43,6 +43,10 @@ const ErrorCode = {
    */
   // 文件不存在
   FILE_NOT_FOUND: 1005001,
+  // 未收到上传的文件
+  FILE_NOT_RECEIVED: 1005002,
+  // 文件上传失败
+  FILE_UPLOAD_FAILED: 1005003,
 };
 
 export default ErrorCode;
