@@ -57,6 +57,13 @@ export class FileService {
   }
 
   /*
+   * 根据fileName查询单个
+   */
+  getDetailByFileName(fileName: string): Promise<File> {
+    return this.fileRepository.findOneBy({ fileName });
+  }
+
+  /*
    * 新增
    */
   async create(file: Partial<File>): Promise<File> {

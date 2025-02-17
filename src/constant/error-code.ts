@@ -49,6 +49,8 @@ const ErrorCode = {
   FILE_NOT_RECEIVED: 1005002,
   // 文件MD5错误
   FILE_MD5_ERROR: 1005003,
+  // 文件已存在
+  FILE_EXISTS: 1005004,
 };
 
 export default ErrorCode;

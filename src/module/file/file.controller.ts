@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, UseInterceptors, Logger } from '@nestjs/common';
+import { Controller, Post, Body, Req, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createWriteStream, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
@@ -6,7 +6,6 @@ import { pipeline } from 'stream/promises';
 import { Roles } from '../../common/decorator/roles.decorator';
 import ErrorCode from '../../constant/error-code';
 import { resSuccess, Type } from '../../utils/index';
-import { FastifyFileInterceptor } from '../../common/interceptors/fastify-file.interceptor';
 import type { HttpResponse, ListResponse } from '../../types/type';
 import { GetListDto, GetDetailDto, DeleteFileDto } from './dto/file.dto';
 import { FileService } from './file.service';
@@ -96,7 +95,6 @@ export class FileController {
    */
   @Post('upload')
   @Roles([1])
-  @UseInterceptors(FastifyFileInterceptor('file'))
   async upload(@Req() req: Request): Promise<HttpResponse<any>> {
     // 获取表单数据
     const formData = await req.formData();
@@ -110,7 +108,15 @@ export class FileController {
       };
     }
     const fileName = suffix ? `${fileMd5}.${suffix}` : fileMd5;
-    const filePath = join(process.cwd(), 'files_storage', fileName);
+
+    // 判断文件是否存在，如果存在无须重新上传
+    const repeatFile = await this.fileService.getDetailByFileName(fileName);
+    if (repeatFile) {
+      return {
+        code: ErrorCode.FILE_EXISTS,
+        message: '文件已存在',
+      };
+    }
 
     // 获取文件
     const file = formData.get('file');
@@ -124,6 +130,7 @@ export class FileController {
     try {
       // 保存文件到 files_storage
       const fileStream = file.stream();
+      const filePath = join(process.cwd(), 'files_storage', fileName);
       await pipeline(fileStream, createWriteStream(filePath));
 
       // 保存文件信息到数据库
