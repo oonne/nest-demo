@@ -65,7 +65,9 @@ const startNest = async () => {
   await app.register(compression);
 
   // 文件上传 multipart
-  await app.register(multipart);
+  await app.register(multipart, {
+    attachFieldsToBody: true,
+  });
 
   // 监听
   await app.listen(port, '0.0.0.0');

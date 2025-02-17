@@ -1,17 +1,18 @@
-import { Controller, Post, Body, UseInterceptors, UploadedFile, Logger } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseInterceptors, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createWriteStream, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import { pipeline } from 'stream/promises';
-import type { MultipartFile } from '@fastify/multipart';
 import { Roles } from '../../common/decorator/roles.decorator';
 import ErrorCode from '../../constant/error-code';
-import { resSuccess } from '../../utils/index';
+import { resSuccess, Type } from '../../utils/index';
 import { FastifyFileInterceptor } from '../../common/interceptors/fastify-file.interceptor';
 import type { HttpResponse, ListResponse } from '../../types/type';
 import { GetListDto, GetDetailDto, DeleteFileDto } from './dto/file.dto';
 import { FileService } from './file.service';
 import type { File } from './file.entity';
+
+const { isFile } = Type;
 
 @Controller('file')
 export class FileController {
@@ -22,6 +23,8 @@ export class FileController {
     // 确保文件上传目录存在
     const uploadDir = join(process.cwd(), 'files_storage');
     if (!existsSync(uploadDir)) {
+      const logger = new Logger();
+      logger.log(`创建文件上传目录: ${uploadDir}`);
       mkdirSync(uploadDir, { recursive: true });
     }
   }
@@ -94,26 +97,40 @@ export class FileController {
   @Post('upload')
   @Roles([1])
   @UseInterceptors(FastifyFileInterceptor('file'))
-  async upload(@UploadedFile() file: MultipartFile): Promise<HttpResponse<any>> {
-    if (!file) {
+  async upload(@Req() req: Request): Promise<HttpResponse<any>> {
+    // 获取表单数据
+    const formData = await req.formData();
+    const suffix = String(formData.get('suffix') ?? '');
+    const type = String(formData.get('type') ?? '');
+    const fileMd5 = String(formData.get('fileMd5') ?? '');
+    if (!fileMd5) {
+      return {
+        code: ErrorCode.FILE_MD5_ERROR,
+        message: '文件MD5错误',
+      };
+    }
+    const fileName = suffix ? `${fileMd5}.${suffix}` : fileMd5;
+    const filePath = join(process.cwd(), 'files_storage', fileName);
+
+    // 获取文件
+    const file = formData.get('file');
+    if (!isFile(file)) {
       return {
         code: ErrorCode.FILE_NOT_RECEIVED,
         message: '未收到上传的文件',
       };
     }
-    const logger = new Logger();
 
     try {
-      const fileName = `${Date.now()}-${file.filename}`;
-      const filePath = join(process.cwd(), 'files_storage', fileName);
-
-      await pipeline(file.file, createWriteStream(filePath));
+      // 保存文件到 files_storage
+      const fileStream = file.stream();
+      await pipeline(fileStream, createWriteStream(filePath));
 
       // 保存文件信息到数据库
       const fileEntity = await this.fileService.create({
-        type: 1,
-        fileName: file.filename,
-        fileSize: file.file.bytesRead,
+        type: type === 'file' ? 2 : 1,
+        fileName: fileName,
+        fileSize: file.size,
       });
 
       return resSuccess({
@@ -121,6 +138,7 @@ export class FileController {
         fileSize: fileEntity.fileSize,
       });
     } catch (error) {
+      const logger = new Logger();
       logger.error('文件上传失败', error);
       return {
         code: ErrorCode.FILE_UPLOAD_FAILED,

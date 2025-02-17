@@ -14,6 +14,7 @@ export function FastifyFileInterceptor(fieldName: string): Type<NestInterceptor>
     async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
       const req = context.switchToHttp().getRequest();
 
+      // 处理文件数据
       const data = await req.file();
       if (data?.fieldname === fieldName) {
         req.incomingFile = data;
