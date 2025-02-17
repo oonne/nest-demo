@@ -43,14 +43,16 @@ const ErrorCode = {
    */
   // 文件不存在
   FILE_NOT_FOUND: 1005001,
-  // 文件上传失败
-  FILE_UPLOAD_FAILED: 1005001,
   // 未收到上传的文件
-  FILE_NOT_RECEIVED: 1005002,
+  FILE_NOT_RECEIVED: 1005001,
   // 文件MD5错误
-  FILE_MD5_ERROR: 1005003,
+  FILE_MD5_ERROR: 1005002,
   // 文件已存在
-  FILE_EXISTS: 1005004,
+  FILE_EXISTS: 1005003,
+  // 文件上传失败
+  FILE_UPLOAD_FAILED: 1005004,
+  // 文件删除失败
+  FILE_DELETE_FAILED: 1005005,
 };
 
 export default ErrorCode;

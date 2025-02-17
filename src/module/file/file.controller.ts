@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Req, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { createWriteStream, mkdirSync, existsSync } from 'fs';
+import { createWriteStream, mkdirSync, existsSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { pipeline } from 'stream/promises';
 import { Roles } from '../../common/decorator/roles.decorator';
@@ -86,8 +86,24 @@ export class FileController {
       };
     }
 
-    await this.fileService.delete(deleteFileDto.fileId);
-    return resSuccess(null);
+    try {
+      // 删除物理文件
+      const filePath = join(process.cwd(), 'files_storage', file.fileName);
+      if (existsSync(filePath)) {
+        unlinkSync(filePath);
+      }
+
+      // 删除数据库记录
+      await this.fileService.delete(deleteFileDto.fileId);
+      return resSuccess(null);
+    } catch (error) {
+      const logger = new Logger();
+      logger.error('文件删除失败', error);
+      return {
+        code: ErrorCode.FILE_DELETE_FAILED,
+        message: '文件删除失败',
+      };
+    }
   }
 
   /*
