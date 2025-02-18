@@ -13,7 +13,7 @@ yarn-error.log*
 lerna-debug.log*
 
 # 文件上传
-/files_storage
+/file_storage
 
 # OS
 .DS_Store

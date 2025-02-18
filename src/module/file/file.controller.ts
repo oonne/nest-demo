@@ -20,7 +20,7 @@ export class FileController {
     private configService: ConfigService,
   ) {
     // 确保文件上传目录存在
-    const uploadDir = join(process.cwd(), 'files_storage');
+    const uploadDir = join(process.cwd(), 'file_storage');
     if (!existsSync(uploadDir)) {
       const logger = new Logger();
       logger.log(`创建文件上传目录: ${uploadDir}`);
@@ -88,7 +88,7 @@ export class FileController {
 
     try {
       // 删除物理文件
-      const filePath = join(process.cwd(), 'files_storage', file.fileName);
+      const filePath = join(process.cwd(), 'file_storage', file.fileName);
       if (existsSync(filePath)) {
         unlinkSync(filePath);
       }
@@ -144,9 +144,9 @@ export class FileController {
     }
 
     try {
-      // 保存文件到 files_storage
+      // 保存文件到 file_storage
       const fileStream = file.stream();
-      const filePath = join(process.cwd(), 'files_storage', fileName);
+      const filePath = join(process.cwd(), 'file_storage', fileName);
       await pipeline(fileStream, createWriteStream(filePath));
 
       // 保存文件信息到数据库
