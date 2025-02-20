@@ -3,6 +3,8 @@ name: nest_demo
 services:
   # Node应用服务配置
   nest_demo:
+    image: nest_demo
+    container_name: nest_demo  # 容器名称
     build:
       context: .  # 使用当前目录作为构建上下文
       dockerfile: Dockerfile

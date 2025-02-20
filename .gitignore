@@ -45,6 +45,7 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+nest_demo_image.tar
 
 # Runtime data
 pids
