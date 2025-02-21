@@ -1,13 +1,14 @@
 import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import config from '../../config/index';
-import { Utils } from '../../utils/index';
+import { Utils, Condition } from '../../utils/index';
 import { Staff } from './staff.entity';
 
 const { passwordIterations } = config;
 const { generateId, randomChars, createHash } = Utils;
+const { getStringCondition } = Condition;
 
 @Injectable()
 export class StaffService {
@@ -90,7 +91,7 @@ export class StaffService {
         [sortField]: sortOrder,
       },
       where: {
-        name: name ? ILike(`%${name}%`) : undefined,
+        name: getStringCondition(name),
         role: role?.length ? In(role) : undefined,
         isActive: isActive,
       },

@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Utils, Condition } from '../../utils/index';
 import { File } from './file.entity';
 
 const { generateId } = Utils;
-const { getNumberCondition } = Condition;
+const { getStringCondition, getNumberCondition } = Condition;
 @Injectable()
 export class FileService {
   constructor(
@@ -41,7 +41,7 @@ export class FileService {
       },
       where: {
         type: type || undefined,
-        fileName: fileName ? ILike(`%${fileName}%`) : undefined,
+        fileName: getStringCondition(fileName),
         fileSize: getNumberCondition(fileSize),
       },
     });

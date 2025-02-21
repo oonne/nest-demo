@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
-import { Utils } from '../../utils/index';
+import { Repository } from 'typeorm';
+import { Utils, Condition } from '../../utils/index';
 import { Setting } from './setting.entity';
 
 const { generateId } = Utils;
+const { getStringCondition } = Condition;
 
 @Injectable()
 export class SettingService {
@@ -40,9 +41,9 @@ export class SettingService {
         [sortField]: sortOrder,
       },
       where: {
-        key: key ? ILike(`%${key}%`) : undefined,
-        value: value ? ILike(`%${value}%`) : undefined,
-        remark: remark ? ILike(`%${remark}%`) : undefined,
+        key: getStringCondition(key),
+        value: getStringCondition(value),
+        remark: getStringCondition(remark),
       },
     });
 

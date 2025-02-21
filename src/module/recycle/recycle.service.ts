@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, In, Repository } from 'typeorm';
-import { Utils } from '../../utils/index';
+import { In, Repository } from 'typeorm';
+import { Utils, Condition } from '../../utils/index';
 import { StaffService } from '../staff/staff.service';
 import { Recycle } from './recycle.entity';
 
 const { generateId } = Utils;
+const { getStringCondition } = Condition;
 
 @Injectable()
 export class RecycleService {
@@ -43,8 +44,8 @@ export class RecycleService {
       },
       where: {
         type: type?.length ? In(type) : undefined,
-        content: content ? ILike(`%${content}%`) : undefined,
-        deleteStaffName: deleteStaffName ? ILike(`%${deleteStaffName}%`) : undefined,
+        content: getStringCondition(content),
+        deleteStaffName: getStringCondition(deleteStaffName),
       },
     });
 

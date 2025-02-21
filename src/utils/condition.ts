@@ -5,8 +5,26 @@ import {
   LessThanOrEqual,
   LessThan,
   Like,
+  ILike,
   FindOperator,
 } from 'typeorm';
+
+/*
+ * 返回字符串字段筛选的条件
+ */
+const getStringCondition = (searchText: string): FindOperator<string> => {
+  if (!searchText) {
+    return undefined;
+  }
+
+  // 当以=开头时，返回等于该值的条件
+  if (searchText.startsWith('=')) {
+    return Equal(searchText.substring(1));
+  }
+
+  // 否则返回ILike条件
+  return ILike(`%${searchText}%`);
+};
 
 /*
  * 返回数字字段筛选的条件
@@ -46,5 +64,6 @@ const getNumberCondition = (searchText: string): FindOperator<number> => {
 };
 
 export default {
+  getStringCondition,
   getNumberCondition,
 };
