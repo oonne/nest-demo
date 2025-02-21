@@ -41,6 +41,7 @@ export class FileController {
       sortOrder: getListDto.sortOrder,
       type: getListDto.type,
       fileName: getListDto.fileName,
+      fileSize: getListDto.fileSize,
     });
 
     // 返回字段处理
