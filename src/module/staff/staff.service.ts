@@ -1,7 +1,7 @@
 import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, In, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 import config from '../../config/index';
 import { Utils } from '../../utils/index';
 import { Staff } from './staff.entity';
@@ -90,7 +90,7 @@ export class StaffService {
         [sortField]: sortOrder,
       },
       where: {
-        name: name ? Like(`%${name}%`) : undefined,
+        name: name ? ILike(`%${name}%`) : undefined,
         role: role?.length ? In(role) : undefined,
         isActive: isActive,
       },

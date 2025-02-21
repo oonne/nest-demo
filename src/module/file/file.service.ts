@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, MoreThan, LessThan, Repository } from 'typeorm';
-import { Utils } from '../../utils/index';
+import { ILike, Repository } from 'typeorm';
+import { Utils, Condition } from '../../utils/index';
 import { File } from './file.entity';
 
 const { generateId } = Utils;
-
+const { getNumberCondition } = Condition;
 @Injectable()
 export class FileService {
   constructor(
@@ -33,19 +33,6 @@ export class FileService {
     type?: number;
     fileSize?: string;
   }): Promise<{ items: File[]; total: number }> {
-    let fileSizeCondition = undefined;
-    if (fileSize) {
-      if (fileSize.startsWith('=')) {
-        fileSizeCondition = Number(fileSize.substring(1));
-      } else if (fileSize.startsWith('>')) {
-        fileSizeCondition = MoreThan(Number(fileSize.substring(1)));
-      } else if (fileSize.startsWith('<')) {
-        fileSizeCondition = LessThan(Number(fileSize.substring(1)));
-      } else {
-        fileSizeCondition = Like(`%${fileSize}%`);
-      }
-    }
-
     const [items, total] = await this.fileRepository.findAndCount({
       skip: (pageNo - 1) * pageSize,
       take: pageSize,
@@ -54,8 +41,8 @@ export class FileService {
       },
       where: {
         type: type || undefined,
-        fileName: fileName ? Like(`%${fileName}%`) : undefined,
-        fileSize: fileSizeCondition,
+        fileName: fileName ? ILike(`%${fileName}%`) : undefined,
+        fileSize: getNumberCondition(fileSize),
       },
     });
 

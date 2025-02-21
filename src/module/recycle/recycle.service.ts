@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, In, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 import { Utils } from '../../utils/index';
 import { StaffService } from '../staff/staff.service';
 import { Recycle } from './recycle.entity';
@@ -43,8 +43,8 @@ export class RecycleService {
       },
       where: {
         type: type?.length ? In(type) : undefined,
-        content: content ? Like(`%${content}%`) : undefined,
-        deleteStaffName: deleteStaffName ? Like(`%${deleteStaffName}%`) : undefined,
+        content: content ? ILike(`%${content}%`) : undefined,
+        deleteStaffName: deleteStaffName ? ILike(`%${deleteStaffName}%`) : undefined,
       },
     });
 

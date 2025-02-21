@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Utils } from '../../utils/index';
 import { Setting } from './setting.entity';
 
@@ -40,9 +40,9 @@ export class SettingService {
         [sortField]: sortOrder,
       },
       where: {
-        key: key ? Like(`%${key}%`) : undefined,
-        value: value ? Like(`%${value}%`) : undefined,
-        remark: remark ? Like(`%${remark}%`) : undefined,
+        key: key ? ILike(`%${key}%`) : undefined,
+        value: value ? ILike(`%${value}%`) : undefined,
+        remark: remark ? ILike(`%${remark}%`) : undefined,
       },
     });
 
