@@ -145,6 +145,7 @@ export class StaffService {
     if (!staffToUpdate) {
       throw new Error('Staff not found');
     }
+
     staffToUpdate = {
       ...staffToUpdate,
       ...staff,
@@ -152,6 +153,7 @@ export class StaffService {
     if (staff.password) {
       staffToUpdate.password = this.hashPassword(staff.password, staffToUpdate.staffId);
     }
+
     return this.staffRepository.save(staffToUpdate);
   }
 

@@ -66,41 +66,28 @@ const getNumberCondition = (searchText: string): FindOperator<number> => {
 
 /*
  * 返回日期字段筛选的条件
- * 如果只传入一个日期，则搜索当天数据
- * 如果以,分隔传入两个日期，则搜索两个日期之间的数据
  */
-const getDateRangeCondition = (
-  dataString: string,
-): FindOperator<Date> | { $gte?: Date; $lte?: Date } => {
+const getDateRangeCondition = (dataString: string): FindOperator<Date> | Date => {
   if (!dataString) {
     return undefined;
   }
 
   const [startDate, endDate] = dataString.split(',');
-
   if (!startDate) {
     return undefined;
   }
-
-  const condition: { $gte?: Date; $lte?: Date } = {};
-
-  if (startDate) {
-    condition.$gte = new Date(startDate);
+  // 如果只传入开始时间，则搜索当天数据
+  if (!endDate) {
+    return new Date(startDate);
   }
 
-  if (endDate) {
-    // 如果传了结束日期，设置为当天的最后一刻
-    const endDateTime = new Date(endDate);
-    endDateTime.setHours(23, 59, 59, 999);
-    condition.$lte = endDateTime;
-  } else {
-    // 如果只传了开始日期，设置为当天的最后一刻
-    const endDateTime = new Date(startDate);
-    endDateTime.setHours(23, 59, 59, 999);
-    condition.$lte = endDateTime;
-  }
+  // 开始时间
+  const startDateTime = new Date(startDate);
+  // 结束时间为当天最后一刻
+  const endDateTime = new Date(endDate);
+  endDateTime.setHours(23, 59, 59, 999);
 
-  return Between(condition.$gte, condition.$lte);
+  return Between(startDateTime, endDateTime);
 };
 
 export default {
