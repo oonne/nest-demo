@@ -53,6 +53,12 @@ const ErrorCode = {
   FILE_UPLOAD_FAILED: 1005004,
   // 文件删除失败
   FILE_DELETE_FAILED: 1005005,
+
+  /*
+   * Blog模块
+   */
+  // 博客不存在
+  BLOG_NOT_FOUND: 1006001,
 };
 
 export default ErrorCode;
