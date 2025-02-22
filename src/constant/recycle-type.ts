@@ -13,6 +13,10 @@ const recycleTypeList: IRecycleType[] = [
     key: 2,
     name: '配置',
   },
+  {
+    key: 3,
+    name: '博客',
+  },
 ];
 
 /* 回收站类型key枚举 */

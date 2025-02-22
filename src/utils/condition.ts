@@ -7,6 +7,7 @@ import {
   Like,
   ILike,
   FindOperator,
+  Between,
 } from 'typeorm';
 
 /*
@@ -63,7 +64,37 @@ const getNumberCondition = (searchText: string): FindOperator<number> => {
   return Like(`%${searchText}%`) as any;
 };
 
+/*
+ * 返回日期字段筛选的条件
+ * @param startDate 开始日期，格式：YYYY-MM-DD
+ * @param endDate 结束日期，格式：YYYY-MM-DD
+ */
+const getDateRangeCondition = (
+  startDate?: string,
+  endDate?: string,
+): FindOperator<Date> | { $gte?: Date; $lte?: Date } => {
+  if (!startDate && !endDate) {
+    return undefined;
+  }
+
+  const condition: { $gte?: Date; $lte?: Date } = {};
+
+  if (startDate) {
+    condition.$gte = new Date(startDate);
+  }
+
+  if (endDate) {
+    // 设置为当天的最后一刻
+    const endDateTime = new Date(endDate);
+    endDateTime.setHours(23, 59, 59, 999);
+    condition.$lte = endDateTime;
+  }
+
+  return Between(condition.$gte, condition.$lte);
+};
+
 export default {
   getStringCondition,
   getNumberCondition,
+  getDateRangeCondition,
 };
