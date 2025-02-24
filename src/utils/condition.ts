@@ -78,13 +78,13 @@ const getDateRangeCondition = (dataString: string): FindOperator<Date> | Date =>
   }
   // 如果只传入开始时间，则搜索当天数据
   if (!endDate) {
-    return new Date(startDate);
+    return new Date(Number(startDate));
   }
 
   // 开始时间
-  const startDateTime = new Date(startDate);
+  const startDateTime = new Date(Number(startDate));
   // 结束时间为当天最后一刻
-  const endDateTime = new Date(endDate);
+  const endDateTime = new Date(Number(endDate));
   endDateTime.setHours(23, 59, 59, 999);
 
   return Between(startDateTime, endDateTime);
