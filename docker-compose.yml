@@ -21,3 +21,4 @@ services:
     volumes:
       - /Users/jay/dev/nest_demo/logs:/app/logs # 挂载日志目录
       - /Users/jay/dev/nest_demo/file_storage:/app/file_storage # 挂载文件存储目录
+      - /Users/jay/dev/nest_demo/blog:/app/blog  # 挂载博客目录

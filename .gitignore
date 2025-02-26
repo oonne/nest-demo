@@ -12,8 +12,9 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# 文件上传
+# 上传和生成的文件
 /file_storage
+/blog
 
 # OS
 .DS_Store
