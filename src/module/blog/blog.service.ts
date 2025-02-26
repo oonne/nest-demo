@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { join } from 'path';
+import { existsSync, mkdirSync, rmdirSync, renameSync } from 'fs';
 import { Repository } from 'typeorm';
 import { Utils, Condition } from '../../utils/index';
 import { Blog } from './blog.entity';
@@ -118,7 +120,34 @@ export class BlogService {
   /*
    * 生成静态网页
    */
-  async generateStaticPage(): Promise<void> {
+  // 生成完整的博客
+  async generateBlog(): Promise<void> {
+    const logger = new Logger();
     // 查询博客列表
+    const blogs = await this.blogRepository.find();
+    if (!blogs.length) {
+      return;
+    }
+
+    // 创建新的博客目录
+    const newBlogDir = join(process.cwd(), 'new-blog');
+    mkdirSync(newBlogDir, { recursive: true });
+
+    // 复制静态资源
+
+    // 循环每一篇博客
+    for (const blog of blogs) {
+      console.log(blog);
+    }
+
+    // 删除旧的博客目录
+    const blogDir = join(process.cwd(), 'blog');
+    if (existsSync(blogDir)) {
+      rmdirSync(blogDir, { recursive: true });
+    }
+
+    // 将新的博客目录重命名为博客目录
+    renameSync(newBlogDir, blogDir);
+    logger.log('已重新生成博客');
   }
 }

@@ -169,8 +169,8 @@ export class BlogController {
    */
   @Post('generate-blog')
   @Roles([1])
-  async generateStaticPage(): Promise<HttpResponse<any>> {
-    this.blogService.generateStaticPage();
+  async generateBlog(): Promise<HttpResponse<any>> {
+    this.blogService.generateBlog();
     return resSuccess(null);
   }
 }
