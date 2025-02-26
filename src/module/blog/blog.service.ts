@@ -114,4 +114,11 @@ export class BlogService {
   async delete(blogId: string): Promise<void> {
     await this.blogRepository.delete({ blogId });
   }
+
+  /*
+   * 生成静态网页
+   */
+  async generateStaticPage(): Promise<void> {
+    // 查询博客列表
+  }
 }

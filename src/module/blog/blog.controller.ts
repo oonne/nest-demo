@@ -162,4 +162,15 @@ export class BlogController {
     await this.blogService.delete(deleteBlogDto.blogId);
     return resSuccess(null);
   }
+
+  /*
+   * 生成博客静态网页
+   * (异步生成，不会返回结果)
+   */
+  @Post('generate-blog')
+  @Roles([1])
+  async generateStaticPage(): Promise<HttpResponse<any>> {
+    this.blogService.generateStaticPage();
+    return resSuccess(null);
+  }
 }
