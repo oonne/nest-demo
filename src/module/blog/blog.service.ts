@@ -1,7 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { join } from 'path';
-import { existsSync, mkdirSync, rmdirSync, renameSync, copySync } from 'fs-extra';
+import {
+  existsSync,
+  mkdirSync,
+  rmdirSync,
+  renameSync,
+  copySync,
+  writeFile,
+  readFile,
+} from 'fs-extra';
 import { Repository } from 'typeorm';
 import { Utils, Condition } from '../../utils/index';
 import { Blog } from './blog.entity';
@@ -123,8 +131,13 @@ export class BlogService {
   // 生成完整的博客
   async generateBlog(): Promise<void> {
     const logger = new Logger();
+
     // 查询博客列表
-    const blogs = await this.blogRepository.find();
+    const blogs = await this.blogRepository.find({
+      order: {
+        publishDate: 'desc',
+      },
+    });
     if (!blogs.length) {
       return;
     }
@@ -132,15 +145,28 @@ export class BlogService {
     // 创建新的博客目录
     const newBlogDir = join(process.cwd(), 'new-blog');
     mkdirSync(newBlogDir, { recursive: true });
+    mkdirSync(join(newBlogDir, 'detail'), { recursive: true });
+    mkdirSync(join(newBlogDir, 'assets'), { recursive: true });
 
     // 复制静态资源
     const templateDir = join(process.cwd(), 'src', 'module', 'blog', 'html-template');
     copySync(join(templateDir, 'favicon'), join(newBlogDir));
-    copySync(join(templateDir, 'assets'), join(newBlogDir));
+    copySync(join(templateDir, 'assets'), join(newBlogDir, 'assets'));
 
-    // 循环每一篇博客
+    // 读取HTML模板
+    const htmlTemplate = join(templateDir, 'index.html');
+    const htmlContent = await readFile(htmlTemplate, 'utf-8');
+
+    // 循环每一篇博客，替换内容生成HTML
     for (const blog of blogs) {
-      console.log(blog);
+      let detailHtml = htmlContent;
+      detailHtml = detailHtml.replace('%Description%', blog.description);
+      detailHtml = detailHtml.replace('%Keyword%', blog.keywords);
+      detailHtml = detailHtml.replace('%Title%', `${blog.title} - 博客`);
+      detailHtml = detailHtml.replace('%Content%', blog.content);
+      detailHtml = detailHtml.replaceAll('%assetsPath%', '../assets');
+      const detailFilePath = join(newBlogDir, 'detail', `${blog.linkUrl}.html`);
+      await writeFile(detailFilePath, detailHtml, 'utf-8');
     }
 
     // 删除旧的博客目录
