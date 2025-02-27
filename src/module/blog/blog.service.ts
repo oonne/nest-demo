@@ -11,6 +11,7 @@ import {
   readFile,
 } from 'fs-extra';
 import { Repository } from 'typeorm';
+import { SettingService } from '../setting/setting.service';
 import { Utils, Condition } from '../../utils/index';
 import { Blog } from './blog.entity';
 
@@ -22,6 +23,7 @@ export class BlogService {
   constructor(
     @InjectRepository(Blog)
     private blogRepository: Repository<Blog>,
+    private settingService: SettingService,
   ) {}
 
   /*
@@ -142,6 +144,10 @@ export class BlogService {
       return;
     }
 
+    // 查询系统配置中的博客Description和Keywords
+    const blogDescription = await this.settingService.getDetailByKey('BLOG_DESCRIPTION');
+    const blogKeywords = await this.settingService.getDetailByKey('BLOG_KEYWORDS');
+
     // 创建新的博客目录
     const newBlogDir = join(process.cwd(), 'new-blog');
     mkdirSync(newBlogDir, { recursive: true });
@@ -160,14 +166,24 @@ export class BlogService {
     // 循环每一篇博客，替换内容生成HTML
     for (const blog of blogs) {
       let detailHtml = htmlContent;
+      detailHtml = detailHtml.replaceAll('%assetsPath%', '../assets');
       detailHtml = detailHtml.replace('%Description%', blog.description);
       detailHtml = detailHtml.replace('%Keyword%', blog.keywords);
       detailHtml = detailHtml.replace('%Title%', `${blog.title} - 博客`);
       detailHtml = detailHtml.replace('%Content%', blog.content);
-      detailHtml = detailHtml.replaceAll('%assetsPath%', '../assets');
       const detailFilePath = join(newBlogDir, 'detail', `${blog.linkUrl}.html`);
       await writeFile(detailFilePath, detailHtml, 'utf-8');
     }
+
+    // 生成列表页
+    let indexHtml = htmlContent;
+    indexHtml = indexHtml.replaceAll('%assetsPath%', '../assets');
+    indexHtml = indexHtml.replace('%Description%', blogDescription?.value || '');
+    indexHtml = indexHtml.replace('%Keyword%', blogKeywords?.value || '');
+    indexHtml = indexHtml.replace('%Title%', '博客');
+    indexHtml = indexHtml.replace('%Content%', '列表');
+    const indexFilePath = join(newBlogDir, 'index.html');
+    await writeFile(indexFilePath, indexHtml, 'utf-8');
 
     // 删除旧的博客目录
     const blogDir = join(process.cwd(), 'blog');
