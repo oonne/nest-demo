@@ -169,19 +169,29 @@ export class BlogService {
       detailHtml = detailHtml.replaceAll('%assetsPath%', '../assets');
       detailHtml = detailHtml.replace('%Description%', blog.description);
       detailHtml = detailHtml.replace('%Keyword%', blog.keywords);
-      detailHtml = detailHtml.replace('%Title%', `${blog.title} - 博客`);
+      detailHtml = detailHtml.replace('%Title%', `${blog.title} - 工程师加一`);
       detailHtml = detailHtml.replace('%Content%', blog.content);
+      detailHtml = detailHtml.replace(/\s+/g, '');
       const detailFilePath = join(newBlogDir, 'detail', `${blog.linkUrl}.html`);
       await writeFile(detailFilePath, detailHtml, 'utf-8');
     }
 
     // 生成列表页
+    let blogList = '';
+    for (const blog of blogs) {
+      blogList += `<li class="blog-list-item"><a href="./detail/${blog.linkUrl}">
+        <h2 class="blog-list-title">${blog.title}</h2>
+        <p class="blog-list-description">${blog.description}</p>
+      </a></li>`;
+    }
+    blogList = `<ul class="blog-list">${blogList}</ul>`;
     let indexHtml = htmlContent;
     indexHtml = indexHtml.replaceAll('%assetsPath%', '../assets');
     indexHtml = indexHtml.replace('%Description%', blogDescription?.value || '');
     indexHtml = indexHtml.replace('%Keyword%', blogKeywords?.value || '');
-    indexHtml = indexHtml.replace('%Title%', '博客');
-    indexHtml = indexHtml.replace('%Content%', '列表');
+    indexHtml = indexHtml.replace('%Title%', '工程师加一');
+    indexHtml = indexHtml.replace('%Content%', blogList);
+    indexHtml = indexHtml.replace(/\s+/g, '');
     const indexFilePath = join(newBlogDir, 'index.html');
     await writeFile(indexFilePath, indexHtml, 'utf-8');
 
