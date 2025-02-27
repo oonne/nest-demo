@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { join } from 'path';
-import { existsSync, mkdirSync, rmdirSync, renameSync } from 'fs';
+import { existsSync, mkdirSync, rmdirSync, renameSync, copySync } from 'fs-extra';
 import { Repository } from 'typeorm';
 import { Utils, Condition } from '../../utils/index';
 import { Blog } from './blog.entity';
@@ -134,6 +134,9 @@ export class BlogService {
     mkdirSync(newBlogDir, { recursive: true });
 
     // 复制静态资源
+    const templateDir = join(process.cwd(), 'src', 'module', 'blog', 'html-template');
+    copySync(join(templateDir, 'favicon'), join(newBlogDir));
+    copySync(join(templateDir, 'assets'), join(newBlogDir));
 
     // 循环每一篇博客
     for (const blog of blogs) {
