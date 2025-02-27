@@ -186,7 +186,7 @@ export class BlogService {
     }
     blogList = `<ul class="blog-list">${blogList}</ul>`;
     let indexHtml = htmlContent;
-    indexHtml = indexHtml.replaceAll('%assetsPath%', '../assets');
+    indexHtml = indexHtml.replaceAll('%assetsPath%', './assets');
     indexHtml = indexHtml.replace('%Description%', blogDescription?.value || '');
     indexHtml = indexHtml.replace('%Keyword%', blogKeywords?.value || '');
     indexHtml = indexHtml.replace('%Title%', '工程师加一');
