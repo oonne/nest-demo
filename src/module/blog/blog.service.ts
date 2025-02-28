@@ -4,13 +4,14 @@ import { join } from 'path';
 import {
   existsSync,
   mkdirSync,
-  rmdirSync,
-  renameSync,
   copySync,
-  writeFile,
-  readFile,
+  writeFileSync,
+  readFileSync,
+  emptyDirSync,
+  rmSync,
 } from 'fs-extra';
 import { Repository } from 'typeorm';
+import { minify } from 'html-minifier-terser';
 import { SettingService } from '../setting/setting.service';
 import { Utils, Condition } from '../../utils/index';
 import { Blog } from './blog.entity';
@@ -134,6 +135,15 @@ export class BlogService {
   async generateBlog(): Promise<void> {
     const logger = new Logger();
 
+    // 压缩配置
+    const minifyOptions = {
+      collapseWhitespace: true,
+      conservativeCollapse: true,
+      removeComments: true,
+      minifyCSS: true,
+      minifyJS: true,
+    };
+
     // 查询博客列表
     const blogs = await this.blogRepository.find({
       order: {
@@ -141,6 +151,7 @@ export class BlogService {
       },
     });
     if (!blogs.length) {
+      logger.log('没有博客，不生成静态网页');
       return;
     }
 
@@ -159,9 +170,15 @@ export class BlogService {
     copySync(join(templateDir, 'favicon'), join(newBlogDir));
     copySync(join(templateDir, 'assets'), join(newBlogDir, 'assets'));
 
+    // 压缩style.css
+    const stylePath = join(newBlogDir, 'assets', 'styles.css');
+    const styleContent = readFileSync(stylePath, 'utf-8');
+    const minifiedStyle = await minify(styleContent, minifyOptions);
+    writeFileSync(stylePath, minifiedStyle, 'utf-8');
+
     // 读取HTML模板
     const htmlTemplate = join(templateDir, 'index.html');
-    const htmlContent = await readFile(htmlTemplate, 'utf-8');
+    const htmlContent = readFileSync(htmlTemplate, 'utf-8');
 
     // 循环每一篇博客，替换内容生成HTML
     for (const blog of blogs) {
@@ -171,9 +188,9 @@ export class BlogService {
       detailHtml = detailHtml.replace('%Keyword%', blog.keywords);
       detailHtml = detailHtml.replace('%Title%', `${blog.title} - 工程师加一`);
       detailHtml = detailHtml.replace('%Content%', blog.content);
-      detailHtml = detailHtml.replace(/\s+/g, '');
+      detailHtml = await minify(detailHtml, minifyOptions);
       const detailFilePath = join(newBlogDir, 'detail', `${blog.linkUrl}.html`);
-      await writeFile(detailFilePath, detailHtml, 'utf-8');
+      writeFileSync(detailFilePath, detailHtml, 'utf-8');
     }
 
     // 生成列表页
@@ -191,18 +208,23 @@ export class BlogService {
     indexHtml = indexHtml.replace('%Keyword%', blogKeywords?.value || '');
     indexHtml = indexHtml.replace('%Title%', '工程师加一');
     indexHtml = indexHtml.replace('%Content%', blogList);
-    indexHtml = indexHtml.replace(/\s+/g, '');
+    indexHtml = await minify(indexHtml, minifyOptions);
     const indexFilePath = join(newBlogDir, 'index.html');
-    await writeFile(indexFilePath, indexHtml, 'utf-8');
+    writeFileSync(indexFilePath, indexHtml, 'utf-8');
 
-    // 删除旧的博客目录
+    // 清空旧的博客目录
     const blogDir = join(process.cwd(), 'blog');
     if (existsSync(blogDir)) {
-      rmdirSync(blogDir, { recursive: true });
+      emptyDirSync(blogDir, { recursive: true });
+    } else {
+      mkdirSync(blogDir, { recursive: true });
     }
 
-    // 将新的博客目录重命名为博客目录
-    renameSync(newBlogDir, blogDir);
+    // 把new-blog目录下的内容复制到blog目录
+    copySync(newBlogDir, blogDir);
+
+    // 删除new-blog目录
+    rmSync(newBlogDir, { recursive: true });
     logger.log('已重新生成博客');
   }
 }
