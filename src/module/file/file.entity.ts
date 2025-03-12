@@ -11,7 +11,7 @@ export class File {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: 'fileId', nullable: false, unique: true })
+  @Column({ comment: 'fileId', length: 255, nullable: false, unique: true })
   fileId: string;
 
   @Column({ comment: `类型: 1 图片, 2 文件`, type: 'int', nullable: false })

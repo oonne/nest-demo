@@ -12,7 +12,7 @@ export class Staff {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: 'staffId', nullable: false, unique: true })
+  @Column({ comment: 'staffId', length: 255, nullable: false, unique: true })
   staffId: string;
 
   @Column({ comment: '用户名', length: 255, nullable: false, unique: true })

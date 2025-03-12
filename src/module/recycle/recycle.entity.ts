@@ -12,7 +12,7 @@ export class Recycle {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: 'recycleId', nullable: false, unique: true })
+  @Column({ comment: 'recycleId', length: 255, nullable: false, unique: true })
   recycleId: string;
 
   @Column({ comment: `类型: ${recycleTypeDesc}`, type: 'int', nullable: false })

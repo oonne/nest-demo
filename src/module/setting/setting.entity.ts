@@ -11,7 +11,7 @@ export class Setting {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: 'settingId', nullable: false, unique: true })
+  @Column({ comment: 'settingId', length: 255, nullable: false, unique: true })
   settingId: string;
 
   @Column({ comment: 'key', length: 255, nullable: false, unique: true })

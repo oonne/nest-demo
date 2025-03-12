@@ -11,7 +11,7 @@ export class Blog {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: 'blogId', nullable: false, unique: true })
+  @Column({ comment: 'blogId', length: 255, nullable: false, unique: true })
   blogId: string;
 
   @Column({ comment: '标题', nullable: false })
