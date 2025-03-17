@@ -1,5 +1,5 @@
 # nest-demo
-Nest 基础基础项目
+Nest 基础项目
 
 # 功能
 * .env环境变量
