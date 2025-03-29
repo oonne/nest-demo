@@ -25,7 +25,7 @@ export class AuthController {
 
     if (!res) {
       return {
-        code: ErrorCode.STAFF_NOT_FOUND,
+        code: ErrorCode.AUTH_NO_INIT,
         message: '无须初始化',
       };
     }
@@ -62,7 +62,7 @@ export class AuthController {
 
     if (!res) {
       return {
-        code: ErrorCode.STAFF_NOT_FOUND,
+        code: ErrorCode.AUTH_LOGIN_FAILED,
         message: '登录失败',
       };
     }
