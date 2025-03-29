@@ -19,7 +19,7 @@ const ErrorCode = {
    */
   // 账号名必须唯一
   STAFF_NAME_UNIQUE: 1002001,
-  // 用户不存在
+  // 账号不存在
   STAFF_NOT_FOUND: 1002002,
 
   /*
