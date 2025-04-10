@@ -73,24 +73,12 @@ const getDateRangeCondition = (dataString: string): FindOperator<Date> | Date =>
   }
 
   const [startDate, endDate] = dataString.split(',');
-  if (!startDate) {
+  if (!startDate || !endDate) {
     return undefined;
   }
-  // 如果只传入开始时间，则搜索当天数据
-  if (!endDate) {
-    const startDateTime = new Date(Number(startDate));
-    startDateTime.setHours(0, 0, 0, 0);
-    const endDateTime = new Date(startDateTime);
-    endDateTime.setHours(23, 59, 59, 999);
-    return Between(startDateTime, endDateTime);
-  }
 
-  // 开始时间为当天0点
   const startDateTime = new Date(Number(startDate));
-  startDateTime.setHours(0, 0, 0, 0);
-  // 结束时间为当天最后一刻
   const endDateTime = new Date(Number(endDate));
-  endDateTime.setHours(23, 59, 59, 999);
 
   return Between(startDateTime, endDateTime);
 };
