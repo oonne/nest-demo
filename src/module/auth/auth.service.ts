@@ -18,7 +18,7 @@ export class AuthService {
   /*
    * 初始化管理员
    */
-  async init() {
+  async init(): Promise<boolean> {
     // 查询是否有staff
     const staff = await this.staffService.getList({
       pageNo: 1,
@@ -76,7 +76,7 @@ export class AuthService {
   /*
    * 验证登录pow
    */
-  async verifyLoginPow({ powKey, name }: { powKey: string; name: string }) {
+  async verifyLoginPow({ powKey, name }: { powKey: string; name: string }): Promise<boolean> {
     const staff = await this.staffService.getDetailByName(name);
     if (!staff) {
       return false;
