@@ -204,8 +204,8 @@ export class BlogService {
     blogList = `<ul class="blog-list">${blogList}</ul>`;
     let indexHtml = htmlContent;
     indexHtml = indexHtml.replaceAll('%assetsPath%', './assets');
-    indexHtml = indexHtml.replace('%Description%', blogDescription?.value || '');
-    indexHtml = indexHtml.replace('%Keyword%', blogKeywords?.value || '');
+    indexHtml = indexHtml.replace('%Description%', blogDescription || '');
+    indexHtml = indexHtml.replace('%Keyword%', blogKeywords || '');
     indexHtml = indexHtml.replace('%Title%', '工程师加一');
     indexHtml = indexHtml.replace('%Content%', blogList);
     indexHtml = await minify(indexHtml, minifyOptions);

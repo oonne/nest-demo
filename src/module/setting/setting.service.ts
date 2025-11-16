@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Utils, Condition } from '../../utils/index';
 import { Setting } from './setting.entity';
 
@@ -12,6 +13,7 @@ export class SettingService {
   constructor(
     @InjectRepository(Setting)
     private settingRepository: Repository<Setting>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   /*
@@ -63,8 +65,22 @@ export class SettingService {
   /*
    * 根据key查询单个
    */
-  getDetailByKey(key: string): Promise<Setting> {
-    return this.settingRepository.findOneBy({ key });
+  async getDetailByKey(key: string): Promise<string> {
+    // 从缓存中获取
+    const value: string = await this.cacheManager.get(key);
+    if (value) {
+      return value;
+    }
+
+    // 读取数据库并写入缓存
+    const setting = await this.settingRepository.findOneBy({ key });
+    if (setting) {
+      await this.cacheManager.set(key, setting.value || '', 0);
+      return setting.value;
+    }
+
+    // 如果数据库中没有，则返回空
+    return null;
   }
 
   /*
