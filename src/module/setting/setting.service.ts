@@ -97,6 +97,9 @@ export class SettingService {
       settingId,
     };
 
+    // 写入缓存
+    await this.cacheManager.set(setting.key, setting.value || '', 0);
+
     return this.settingRepository.save(settingToCreate);
   }
 
@@ -114,6 +117,9 @@ export class SettingService {
       ...setting,
     };
 
+    // 写入缓存
+    await this.cacheManager.set(setting.key, setting.value || '', 0);
+
     return this.settingRepository.save(settingToUpdate);
   }
 
@@ -121,6 +127,9 @@ export class SettingService {
    * 删除
    */
   async delete(settingId: string): Promise<void> {
+    // 删除缓存
+    await this.cacheManager.del(settingId);
+
     await this.settingRepository.delete({ settingId });
   }
 }
