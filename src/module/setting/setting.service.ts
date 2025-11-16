@@ -127,9 +127,14 @@ export class SettingService {
    * 删除
    */
   async delete(settingId: string): Promise<void> {
-    // 删除缓存
-    await this.cacheManager.del(settingId);
+    const setting = await this.settingRepository.findOneBy({ settingId });
+    if (!setting) {
+      throw new Error('Setting not found');
+    }
 
+    // 删除缓存
+    await this.cacheManager.del(setting.key);
+    // 删除
     await this.settingRepository.delete({ settingId });
   }
 }
