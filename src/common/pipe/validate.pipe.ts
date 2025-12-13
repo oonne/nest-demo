@@ -27,8 +27,26 @@ export class ValidationPipe implements PipeTransform<any> {
     const errors = await validate(object);
     if (errors.length > 0) {
       console.log(errors);
-      const firstError = Object.values(errors[0].constraints);
-      const errorMsg = `Request parameters are error: ${firstError}`;
+      // 递归查找第一个有约束的错误信息
+      const getFirstConstraintError = (error: any): string | null => {
+        if (error.constraints && Object.keys(error.constraints).length > 0) {
+          return Object.values(error.constraints)[0] as string;
+        }
+        if (error.children && error.children.length > 0) {
+          for (const child of error.children) {
+            const childError = getFirstConstraintError(child);
+            if (childError) {
+              return childError;
+            }
+          }
+        }
+        return null;
+      };
+
+      const firstError = getFirstConstraintError(errors[0]);
+      const errorMsg = firstError
+        ? `Request parameters are error: ${firstError}`
+        : `Request parameters are error: ${errors[0].property || 'unknown field'}`;
       throw new BadRequestException(errorMsg);
     }
     return value;
